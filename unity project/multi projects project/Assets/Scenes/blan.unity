@@ -3595,6 +3595,13 @@ MonoBehaviour:
   dots: []
   things: []
   texts: []
+  dotsOrder: []
+  hold: 0
+  holding: 0
+  moveB: 0
+  yORx: 0
+  reading: 0
+  read: 1
   timer: 0
   val: 0
   maxTimerVal: 0

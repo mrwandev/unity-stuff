@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 	public TextMeshProUGUI debugText, unit_T, deleteT_T;
 	public TMP_InputField val_I, rT_I, unit_I, mesure_I; 
 	public List<GameObject> dots, things, texts, dotsOrder;
-	bool hold, holding, moveB, yORx;
+	public bool hold, holding, moveB, yORx, reading, read;
 	Vector3 pos, touchPos;
 	public float timer, val, maxTimerVal, rotationFractions, unit, odrunit, shownUnit;
 
@@ -43,17 +43,19 @@ public class GameManager : MonoBehaviour
     	unit_I.text = shownUnit.ToString();
 
     	maxTimerVal = .3f;
-    	Read();
+
+    	if(read)
+    		Read();
     }
 
     // Update is called once per frame
     void Update()
     {	
-    	if(dots.Count > 1)
-    	{
-    		for(int i = 0; i < dots.Count-1; i++)
-    			twoDotsClass.twoDots(dots[i], dots[i+1], things[i], .9f, rotationFractions);
-    	}
+    	// if(dots.Count > 1)
+    	// {
+    	// 	for(int i = 0; i < dots.Count-1; i++)
+    	// 		twoDotsClass.twoDots(dots[i], dots[i+1], things[i], .9f, rotationFractions);
+    	// }
     	
     	unit_T.text = "1 unit = " + unit.ToString() + "m";
 
@@ -222,7 +224,7 @@ public class GameManager : MonoBehaviour
 
     	dotsOrder.Add(lastHoldedDot);
 
-    	if(dots.Count > 1)
+    	if(dots.Count > 1 && !reading)
     	{
     		newDot.transform.position = new Vector3(dots[dots.Count-2].transform.position.x + 3f, dots[dots.Count-2].transform.position.y + 0f, 0f);
     		currDot = newDot;
@@ -230,38 +232,30 @@ public class GameManager : MonoBehaviour
     			prevDot = dots[System.Convert.ToInt32(newDot.name.Replace("dot", ""))-1];
     		GameObject newThing = Instantiate(thingPrefab);
     		newThing.name = "thing"+ (dots.Count-1).ToString();
-    		// newThing.AddComponent<Connection>();
+    		newThing.AddComponent<Connection>();
     		things.Add(newThing);
     		holdedThing = newThing;
     	}
     }
 
-    public void CreateDot(float x, float y)
+    public void CreateConnection(GameObject _prevDot, GameObject _currDot, string thingname)
     {
-    	GameObject newDot = Instantiate(dotPrefab);
-    	newDot.name = "dot"+ dots.Count;
-    	dots.Add(newDot);
-    	newDot.transform.position = new Vector3(x, y, 0f);
-
-		if(dots.Count > 1)
+    	if(dots.Count > 1)
     	{
-    		currDot = newDot;
-			if(prevDot == currDot || prevDot == null)
-				prevDot = dots[System.Convert.ToInt32(newDot.name.Replace("dot", ""))-1];
-			GameObject newThing = Instantiate(thingPrefab);
-			newThing.name = "thing"+ (dots.Count-1).ToString();
-			newThing.AddComponent<Connection>();
-			newThing.GetComponent<Connection>().prevDot = dotsOrder[dots.Count-1];
-			newThing.GetComponent<Connection>().currDot = dotsOrder[dots.Count];
-			things.Add(newThing);
-			holdedThing = newThing;
+    		GameObject newThing = Instantiate(thingPrefab);
+    		newThing.name = thingname;
+    		newThing.AddComponent<Connection>();
+    		newThing.GetComponent<Connection>().prevDot = _prevDot;
+    		newThing.GetComponent<Connection>().currDot = _currDot;
+    		things.Add(newThing);
+    		holdedThing = newThing;
 
 			foreach(GameObject thing in things)
 	     	{
 	     		if(GameObject.Find("text"+thing.name.Replace("thing", "")) == null)
 	     		{
 	     			GameObject text = Instantiate(textForThingPrefab);
-	     			text.name = "text" + (dots.Count-1).ToString();
+	     			text.name = "text" + thingname.Replace("thing", "").ToString();
 	     			texts.Add(text);
 	     		}
 	     		else 
@@ -275,7 +269,49 @@ public class GameManager : MonoBehaviour
 	     				deleteT_T.text = holdedThing.name + ":" + "\n" + (odrunit/1.09f).ToString("F3");
 	     		}
 	     	}
-		}
+    	}
+    }
+
+    public void CreateDot(float x, float y)
+    {
+    	GameObject newDot = Instantiate(dotPrefab);
+    	newDot.name = "dot"+ dots.Count;
+    	dots.Add(newDot);
+    	newDot.transform.position = new Vector3(x, y, 0f);
+
+		// if(dots.Count > 1)
+  //   	{
+  //   		currDot = newDot;
+		// 	if(prevDot == currDot || prevDot == null)
+		// 		prevDot = dots[System.Convert.ToInt32(newDot.name.Replace("dot", ""))-1];
+		// 	GameObject newThing = Instantiate(thingPrefab);
+		// 	newThing.name = "thing"+ (dots.Count-1).ToString();
+		// 	newThing.AddComponent<Connection>();
+		// 	newThing.GetComponent<Connection>().prevDot = dotsOrder[dots.Count-1];
+		// 	newThing.GetComponent<Connection>().currDot = dotsOrder[dots.Count];
+		// 	things.Add(newThing);
+		// 	holdedThing = newThing;
+
+		// 	foreach(GameObject thing in things)
+	 //     	{
+	 //     		if(GameObject.Find("text"+thing.name.Replace("thing", "")) == null)
+	 //     		{
+	 //     			GameObject text = Instantiate(textForThingPrefab);
+	 //     			text.name = "text" + (dots.Count-1).ToString();
+	 //     			texts.Add(text);
+	 //     		}
+	 //     		else 
+	 //     		{
+	 //     			GameObject text = GameObject.Find("text"+thing.name.Replace("thing", ""));
+	 //     			text.transform.position = new Vector3(thing.transform.position.x, thing.transform.position.y, -0.2f);
+	 //     			text.transform.eulerAngles = new Vector3(0f, 0f, thing.transform.eulerAngles.z);
+	 //     			odrunit = ((thing.transform.localScale.x/unit)*10.9f)/10f;
+	 //     			text.GetComponent<TextMesh>().text = (odrunit/1.09f).ToString("F3");
+	 //     			if(thing == holdedThing)
+	 //     				deleteT_T.text = holdedThing.name + ":" + "\n" + (odrunit/1.09f).ToString("F3");
+	 //     		}
+	 //     	}
+		// }
     }
 
     public void DeleteThing()
@@ -342,7 +378,11 @@ public class GameManager : MonoBehaviour
     public void Save()
     {
 	    if(File.Exists(saveFile))
-    		File.Delete(saveFile);
+	    {
+	    	string str = File.ReadAllText(saveFile);
+			str = str.Replace(str, "");
+    		// File.Delete(saveFile);
+	    }
 
     	string thingy = "";
 
@@ -351,6 +391,8 @@ public class GameManager : MonoBehaviour
     		thingy += dot.transform.position.x.ToString()+"\n";
 			thingy += dot.transform.position.y.ToString()+"\n";
     	}
+    	foreach(GameObject thing in things)
+    		thingy += thing.name + "=" + thing.GetComponent<Connection>().prevDot.name + "+" + thing.GetComponent<Connection>().currDot.name+"\n";
     	
     	File.WriteAllText(saveFile, thingy);  
     }
@@ -359,7 +401,35 @@ public class GameManager : MonoBehaviour
     {
     	string[] thingy = File.ReadAllLines(saveFile);
 
-    	for(int i = 0; i < thingy.Length/2; i++)
-    		CreateDot(float.Parse(thingy[i*2]), float.Parse(thingy[(i*2)+1]));
+    	int cordsMax = 0;
+
+    	for(int i = 0; i < thingy.Length; i++)
+    	{
+    		if(thingy[i].IndexOf("thing")!=0)
+    			cordsMax++;
+    	}
+
+    	for(int i = 0; i < thingy.Length; i++)
+    	{
+    		if(i < cordsMax/2)
+    			CreateDot(float.Parse(thingy[i*2]), float.Parse(thingy[(i*2)+1]));
+    	}
+
+    	string thingname = "";
+    	GameObject dot1 = null;
+    	GameObject dot2 = null;
+
+    	for(int i = 0; i < thingy.Length; i++)
+    	{
+    		if(thingy[i].IndexOf("thing")==0)
+    		{
+    			thingname = indexChar(thingy[i], thingy[i].IndexOf("=")) + "=";
+    			dot1 = GameObject.Find(indexChar(thingy[i], thingy[i].IndexOf("+")).Replace(thingname, ""));
+    			dot2 = GameObject.Find(thingy[i].Replace(indexChar(thingy[i], thingy[i].IndexOf("+")) + "+", "").Replace(thingname, ""));
+	    		CreateConnection(dot1, dot2, thingname.Replace("=", ""));
+    		}
+	    }
+
+		reading = true;
     }
 }

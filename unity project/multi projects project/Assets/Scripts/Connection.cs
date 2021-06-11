@@ -5,15 +5,15 @@ using UnityEngine;
 public class Connection : MonoBehaviour
 {
 	GameManager gameManager;
-	[HideInInspector]
+	// [HideInInspector]
 	public GameObject prevDot, currDot;
 
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        prevDot = gameManager.prevDot;
-        currDot = gameManager.currDot;
+        // prevDot = gameManager.prevDot;
+        // currDot = gameManager.currDot;
     }
 
     // Update is called once per frame
