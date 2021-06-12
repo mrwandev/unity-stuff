@@ -8,53 +8,80 @@ using System.IO;
 public class GameManager : MonoBehaviour
 {
 	// public Slider slider;
-	public GameObject prevDot, currDot, square, holdedDot, holdedThing, dotPrefab, thingPrefab, textForThingPrefab, lastHoldedDot;
+	public GameObject prevDot, currDot, square, holdedDot, holdedLine, dotPrefab, linePrefab, textForLinePrefab, lastHoldedDot;
 	public TextMeshProUGUI debugText, unit_T, deleteT_T;
 	public TMP_InputField val_I, rT_I, unit_I, mesure_I; 
-	public List<GameObject> dots, things, texts, dotsOrder;
-	public bool hold, holding, moveB, yORx, reading, read;
+	public List<GameObject> dots, lines, texts;
+	bool hold, holding, moveB, yORx;
 	Vector3 pos, touchPos;
 	public float timer, val, maxTimerVal, rotationFractions, unit, odrunit, shownUnit;
+    public string saveFileDir, loadedLines;
+    public Toggle singleDotToggle;
 
     // Start is called before the first frame update
     void Start()
     {
-    	#if UNITY_ANDROID
-	    	saveFile = "jar:file://" + Application.dataPath +"/data.txt";
-	    #endif
+        SaveFileDir("data.mrwan");
 
-	    #if UNITY_STANDALONE_WIN
-	    	saveFile = Application.dataPath +"/data.txt";
-	    #endif
+        SetVars();
 
-	    #if UNITY_EDITOR
-	    	saveFile = "Assets/data.txt";
-	    #endif
+        if(File.Exists(saveFileDir))
+    	   Read();
+    }
 
-    	// slider.maxValue = 50f;
-    	// slider.minValue = 10f;
-    	val = -Camera.main.transform.position.z;
-    	rotationFractions = 0f;
-    	unit = 1.09f;
-    	shownUnit = 1f;
+    void SaveFileDir(string fileName)
+    {
+        #if UNITY_ANDROID || UNITY_STANDALONE_WIN
+            saveFileDir = Application.persistentDataPath + "/" + fileName;
+        #endif
 
-    	val_I.text = val.ToString();
-    	rT_I.text = rotationFractions.ToString();
-    	unit_I.text = shownUnit.ToString();
+        #if UNITY_EDITOR
+            saveFileDir = "Assets" + "/" + fileName;
+        #endif
+    }
 
-    	maxTimerVal = .3f;
+    void SetVars()
+    {
+        // slider.maxValue = 50f;
+        // slider.minValue = 10f;
+        val = -Camera.main.transform.position.z;
+        rotationFractions = 0f;
+        unit = 1.09f;
+        shownUnit = 1f;
 
-    	if(read)
-    		Read();
+        val_I.text = val.ToString();
+        rT_I.text = rotationFractions.ToString();
+        unit_I.text = shownUnit.ToString();
+        mesure_I.text = "0";
+
+        maxTimerVal = .3f;
     }
 
     // Update is called once per frame
     void Update()
     {	
+        List<GameObject> loadedLinesList = new List<GameObject>();
+        string goS = "";
+        foreach(char letter in loadedLines)
+        {
+            if(letter != '&')
+                goS += letter.ToString();
+            else
+            {
+                loadedLinesList.Add(GameObject.Find(goS));
+                goS = "";
+            }
+        }
+        foreach(GameObject go in loadedLinesList)
+        {
+            if (!lines.Contains(go))
+                loadedLines = loadedLines.Replace(go.name + "&", "");
+        }
+
     	// if(dots.Count > 1)
     	// {
     	// 	for(int i = 0; i < dots.Count-1; i++)
-    	// 		twoDotsClass.twoDots(dots[i], dots[i+1], things[i], .9f, rotationFractions);
+    	// 		twoDotsClass.twoDots(dots[i], dots[i+1], lines[i], .9f, rotationFractions);
     	// }
     	
     	unit_T.text = "1 unit = " + unit.ToString() + "m";
@@ -66,19 +93,25 @@ public class GameManager : MonoBehaviour
     	unit = float.Parse(unit_I.text);
     	shownUnit = unit/1.09f;
 
-    	if(Input.touchCount > 0 && timer < maxTimerVal && !hold || Input.touchCount > 0 && timer < maxTimerVal && !holding)
-    		debugText.text = timer.ToString();
-    	else
-    		debugText.text = "nothing";
+        // debugText.text = Application.dataPath + "/" + "data.mrwan" + "\n" + 
+        //     			  Application.persistentDataPath + "/" + "data.mrwan" + "\n" +
+        //     			  Application.streamingAssetsPath + "/" + "data.mrwan";
 
-    	if(Input.touchCount == 1 && !hold || Input.touchCount == 1 && !holding || Input.GetKey(KeyCode.A) && !hold || Input.GetKey(KeyCode.A) && !holding)
-    	{
-    		timer += Time.deltaTime;
-    		if(timer > maxTimerVal)
-    			debugText.text = "move";
-    	}
-    	else
-    		timer = 0f;
+        debugText.text = saveFileDir;
+
+    	// if(Input.touchCount > 0 && timer < maxTimerVal && !hold || Input.touchCount > 0 && timer < maxTimerVal && !holding)
+    	// 	debugText.text = timer.ToString();
+    	// else
+    	// 	debugText.text = "nothing";
+
+    	// if(Input.touchCount == 1 && !hold || Input.touchCount == 1 && !holding || Input.GetKey(KeyCode.A) && !hold || Input.GetKey(KeyCode.A) && !holding)
+    	// {
+    	// 	timer += Time.deltaTime;
+    	// 	if(timer > maxTimerVal)
+    	// 		debugText.text = "move";
+    	// }
+    	// else
+    	// 	timer = 0f;
 
     	// if(Input.touchCount > 1)
     	// {
@@ -108,53 +141,53 @@ public class GameManager : MonoBehaviour
     	// if(dots.Count > 1)
     	// {
     	// 	for(int i = 0; i < dots.Count-1; i++)
-    	// 		twoDotsClass.twoDots(dots[i], dots[i+1], things[i], .9f, rotationFractions);
+    	// 		twoDotsClass.twoDots(dots[i], dots[i+1], lines[i], .9f, rotationFractions);
     	// }
 
      	if(dots.Count < 1)
      		return;
 
-     	foreach(GameObject thing in things)
+     	foreach(GameObject line in lines)
      	{
-     		if(GameObject.Find("text"+thing.name.Replace("thing", "")) == null)
+     		if(GameObject.Find("text"+line.name.Replace("line", "")) == null)
      		{
-     			GameObject text = Instantiate(textForThingPrefab);
+     			GameObject text = Instantiate(textForLinePrefab);
      			text.name = "text" + (dots.Count-1).ToString();
      			texts.Add(text);
      		}
      		else 
      		{
-     			GameObject text = GameObject.Find("text"+thing.name.Replace("thing", ""));
-     			text.transform.position = new Vector3(thing.transform.position.x, thing.transform.position.y, -0.2f);
-     			text.transform.eulerAngles = new Vector3(0f, 0f, thing.transform.eulerAngles.z);
-     			odrunit = ((thing.transform.localScale.x/unit)*10.9f)/10f;
+     			GameObject text = GameObject.Find("text"+line.name.Replace("line", ""));
+     			text.transform.position = new Vector3(line.transform.position.x, line.transform.position.y, -0.2f);
+     			text.transform.eulerAngles = new Vector3(0f, 0f, line.transform.eulerAngles.z);
+     			odrunit = line.transform.localScale.x/unit*10.9f/10f;
      			text.GetComponent<TextMesh>().text = (odrunit/1.09f).ToString("F3");
-     			if(thing == holdedThing)
-     				deleteT_T.text = holdedThing.name + ":" + "\n" + (odrunit/1.09f).ToString("F3");
+     			if(line == holdedLine)
+     				deleteT_T.text = holdedLine.name + ":" + "\n" + (odrunit/1.09f).ToString("F3");
      		}
      	}
 
+        bool CloseToVector3(Vector3 v1, Vector3 v2)
+        {
+            return Mathf.Round(v2.x) == Mathf.Round(v1.x) && Mathf.Round(v2.y) == Mathf.Round(v1.y);
+        }
+
  		foreach(GameObject dot in dots)
      	{
-     		if(closeTo(dot.transform.position, pos))
-     			hold = true;
-     		else
-     			hold = false;
+     		hold = CloseToVector3(dot.transform.position, pos);
 
      		if(Input.GetKeyUp(KeyCode.Mouse0) || !hold)
      			dot.GetComponent<SpriteRenderer>().color = Color.white;
 
      		if(hold)
-     		{
      			holdedDot = dot;
-     			prevDot = dot;
-     		}
 
      		if(Input.GetKeyUp(KeyCode.Mouse0))
      			holding = false;
 
      		if(hold && Input.GetKey(KeyCode.Mouse0))
      		{
+     			prevDot = dot;
      			lastHoldedDot = dot;
      			holding = true;
      		}
@@ -165,25 +198,22 @@ public class GameManager : MonoBehaviour
      			holdedDot.GetComponent<SpriteRenderer>().color = Color.red;
      			return;
      		}
-     		else
-     			holdedDot = null;
+     		
+            holdedDot = null;
 
      		if(hold)
      			dot.GetComponent<SpriteRenderer>().color = Color.green;
      	}
 
-     	foreach(GameObject thing in things)
+     	foreach(GameObject line in lines)
      	{
-     		if(closeTo(thing.transform.position, pos))
-     			hold = true;
-     		else
-     			hold = false;
+     		hold = CloseToVector3(line.transform.position, pos);
 
      		if(Input.GetKeyUp(KeyCode.Mouse0) || !hold)
-     			thing.GetComponent<SpriteRenderer>().color = Color.white;
+     			line.GetComponent<SpriteRenderer>().color = Color.white;
 
      		if(hold && Input.GetKey(KeyCode.Mouse0))
-     			holdedThing = thing;
+     			holdedLine = line;
 
      		if(Input.GetKeyUp(KeyCode.Mouse0))
      			holding = false;
@@ -193,24 +223,13 @@ public class GameManager : MonoBehaviour
 
      		if(holding)
      		{
-     			// holdedThing.transform.position = pos;
-     			holdedThing.GetComponent<SpriteRenderer>().color = Color.red;
-     			return;
+     			holdedLine.GetComponent<SpriteRenderer>().color = Color.red;
+     			break;
      		}
-     		// else
-     		// 	holdedThing = null;
 
      		if(hold)
-     			thing.GetComponent<SpriteRenderer>().color = Color.green;
+     			line.GetComponent<SpriteRenderer>().color = Color.green;
      	}
-    }
-
-    bool closeTo(Vector3 v1, Vector3 v2)
-    {
-    	if(Mathf.Round(v2.x) == Mathf.Round(v1.x) && Mathf.Round(v2.y) == Mathf.Round(v1.y))
-    		return true;
-    	else
-    		return false;
     }
 
     public void CreateDot()
@@ -222,53 +241,17 @@ public class GameManager : MonoBehaviour
     	if(dots.Count == 1)
     		lastHoldedDot = newDot;
 
-    	dotsOrder.Add(lastHoldedDot);
-
-    	if(dots.Count > 1 && !reading)
+    	if(dots.Count > 1 && !singleDotToggle.isOn)
     	{
     		newDot.transform.position = new Vector3(dots[dots.Count-2].transform.position.x + 3f, dots[dots.Count-2].transform.position.y + 0f, 0f);
     		currDot = newDot;
     		if(prevDot == currDot || prevDot == null)
     			prevDot = dots[System.Convert.ToInt32(newDot.name.Replace("dot", ""))-1];
-    		GameObject newThing = Instantiate(thingPrefab);
-    		newThing.name = "thing"+ (dots.Count-1).ToString();
-    		newThing.AddComponent<Connection>();
-    		things.Add(newThing);
-    		holdedThing = newThing;
-    	}
-    }
-
-    public void CreateConnection(GameObject _prevDot, GameObject _currDot, string thingname)
-    {
-    	if(dots.Count > 1)
-    	{
-    		GameObject newThing = Instantiate(thingPrefab);
-    		newThing.name = thingname;
-    		newThing.AddComponent<Connection>();
-    		newThing.GetComponent<Connection>().prevDot = _prevDot;
-    		newThing.GetComponent<Connection>().currDot = _currDot;
-    		things.Add(newThing);
-    		holdedThing = newThing;
-
-			foreach(GameObject thing in things)
-	     	{
-	     		if(GameObject.Find("text"+thing.name.Replace("thing", "")) == null)
-	     		{
-	     			GameObject text = Instantiate(textForThingPrefab);
-	     			text.name = "text" + thingname.Replace("thing", "").ToString();
-	     			texts.Add(text);
-	     		}
-	     		else 
-	     		{
-	     			GameObject text = GameObject.Find("text"+thing.name.Replace("thing", ""));
-	     			text.transform.position = new Vector3(thing.transform.position.x, thing.transform.position.y, -0.2f);
-	     			text.transform.eulerAngles = new Vector3(0f, 0f, thing.transform.eulerAngles.z);
-	     			odrunit = ((thing.transform.localScale.x/unit)*10.9f)/10f;
-	     			text.GetComponent<TextMesh>().text = (odrunit/1.09f).ToString("F3");
-	     			if(thing == holdedThing)
-	     				deleteT_T.text = holdedThing.name + ":" + "\n" + (odrunit/1.09f).ToString("F3");
-	     		}
-	     	}
+    		GameObject newLine = Instantiate(linePrefab);
+    		newLine.name = "line"+ (dots.Count-1).ToString();
+    		newLine.AddComponent<Connection>();
+    		lines.Add(newLine);
+    		holdedLine = newLine;
     	}
     }
 
@@ -278,60 +261,91 @@ public class GameManager : MonoBehaviour
     	newDot.name = "dot"+ dots.Count;
     	dots.Add(newDot);
     	newDot.transform.position = new Vector3(x, y, 0f);
-
-		// if(dots.Count > 1)
-  //   	{
-  //   		currDot = newDot;
-		// 	if(prevDot == currDot || prevDot == null)
-		// 		prevDot = dots[System.Convert.ToInt32(newDot.name.Replace("dot", ""))-1];
-		// 	GameObject newThing = Instantiate(thingPrefab);
-		// 	newThing.name = "thing"+ (dots.Count-1).ToString();
-		// 	newThing.AddComponent<Connection>();
-		// 	newThing.GetComponent<Connection>().prevDot = dotsOrder[dots.Count-1];
-		// 	newThing.GetComponent<Connection>().currDot = dotsOrder[dots.Count];
-		// 	things.Add(newThing);
-		// 	holdedThing = newThing;
-
-		// 	foreach(GameObject thing in things)
-	 //     	{
-	 //     		if(GameObject.Find("text"+thing.name.Replace("thing", "")) == null)
-	 //     		{
-	 //     			GameObject text = Instantiate(textForThingPrefab);
-	 //     			text.name = "text" + (dots.Count-1).ToString();
-	 //     			texts.Add(text);
-	 //     		}
-	 //     		else 
-	 //     		{
-	 //     			GameObject text = GameObject.Find("text"+thing.name.Replace("thing", ""));
-	 //     			text.transform.position = new Vector3(thing.transform.position.x, thing.transform.position.y, -0.2f);
-	 //     			text.transform.eulerAngles = new Vector3(0f, 0f, thing.transform.eulerAngles.z);
-	 //     			odrunit = ((thing.transform.localScale.x/unit)*10.9f)/10f;
-	 //     			text.GetComponent<TextMesh>().text = (odrunit/1.09f).ToString("F3");
-	 //     			if(thing == holdedThing)
-	 //     				deleteT_T.text = holdedThing.name + ":" + "\n" + (odrunit/1.09f).ToString("F3");
-	 //     		}
-	 //     	}
-		// }
     }
 
-    public void DeleteThing()
+    public void CreateConnection(GameObject _prevDot, GameObject _currDot, string linename)
     {
-    	things.Remove(holdedThing);
-    	Destroy(holdedThing);
+        if(dots.Count > 1)
+        {
+            GameObject newLine = Instantiate(linePrefab);
+            newLine.name = linename;
+            newLine.AddComponent<Connection>();
+            newLine.GetComponent<Connection>().prevDot = _prevDot;
+            newLine.GetComponent<Connection>().currDot = _currDot;
+            lines.Add(newLine);
+            holdedLine = newLine;
 
-    	if(GameObject.Find("thing"+(System.Convert.ToInt32(holdedThing.name.Replace("thing", ""))+1).ToString())!=null)
-    	{
-    		dots.Remove(holdedThing.GetComponent<Connection>().prevDot);
-    		Destroy(holdedThing.GetComponent<Connection>().prevDot);
-    	}
-    	else
-    	{
-    		dots.Remove(holdedThing.GetComponent<Connection>().currDot);
-    		Destroy(holdedThing.GetComponent<Connection>().currDot);
-    	}
+            foreach(GameObject line in lines)
+            {
+                if(GameObject.Find("text" + line.name.Replace("line", "")) == null)
+                {
+                    GameObject text = Instantiate(textForLinePrefab);
+                    text.name = "text" + linename.Replace("line", "").ToString();
+                    texts.Add(text);
+                }
+                else
+                {
+                    GameObject text = GameObject.Find("text" + line.name.Replace("line", ""));
+                    text.transform.position = new Vector3(line.transform.position.x, line.transform.position.y, -0.2f);
+                    text.transform.eulerAngles = new Vector3(0f, 0f, line.transform.eulerAngles.z);
+                    odrunit = line.transform.localScale.x / unit * 10.9f / 10f;
+                    text.GetComponent<TextMesh>().text = (odrunit / 1.09f).ToString("F3");
 
-    	Destroy(GameObject.Find("text"+holdedThing.name.Replace("thing", "")));
-    	texts.Remove(GameObject.Find("text"+holdedThing.name.Replace("thing", "")));
+                    if(line == holdedLine)
+                        deleteT_T.text = holdedLine.name + ":\n" + (odrunit / 1.09f).ToString("F3");
+                }
+            }
+        }
+    }
+
+    // bool noLineHasTwoDots(GameObject dot1, GameObject dot2)
+    // {
+    //     int yee = 0;
+    //     foreach (GameObject line in lines)
+    //     {
+    //         if(line.GetComponent<Connection>().currDot != dot1 && line.GetComponent<Connection>().prevDot != dot2 && 
+    //            line.GetComponent<Connection>().currDot != dot2 && line.GetComponent<Connection>().prevDot != dot1)
+    //             yee++;
+    //     }
+    //     return yee == lines.Count;
+    // }
+
+    bool noLineHasThisDot(GameObject dot1)
+    {
+        int yee = 0;
+        foreach(GameObject line in lines)
+        {
+            if(line.GetComponent<Connection>().prevDot != dot1 && line.GetComponent<Connection>().currDot != dot1)
+                yee++;
+        }
+        return yee == lines.Count;
+    }
+
+    public void DeleteLine()
+    {
+        lines.Remove(holdedLine);
+        Destroy(holdedLine);
+
+        // if(noLineHasTwoDots(holdedLine.GetComponent<Connection>().currDot, holdedLine.GetComponent<Connection>().prevDot))
+        // {
+        //     dots.Remove(holdedLine.GetComponent<Connection>().prevDot);
+        //     Destroy(holdedLine.GetComponent<Connection>().prevDot);
+
+        //     dots.Remove(holdedLine.GetComponent<Connection>().currDot);
+        //     Destroy(holdedLine.GetComponent<Connection>().currDot);
+        // }
+        if(noLineHasThisDot(holdedLine.GetComponent<Connection>().prevDot))
+        {
+            dots.Remove(holdedLine.GetComponent<Connection>().prevDot);
+            Destroy(holdedLine.GetComponent<Connection>().prevDot);
+        }
+        if(noLineHasThisDot(holdedLine.GetComponent<Connection>().currDot))
+        {
+            dots.Remove(holdedLine.GetComponent<Connection>().currDot);
+            Destroy(holdedLine.GetComponent<Connection>().currDot);
+        }
+        Destroy(GameObject.Find("text" + holdedLine.name.Replace("line", "")));
+        texts.Remove(GameObject.Find("text" + holdedLine.name.Replace("line", "")));
     }
 
     Vector3 floatToCordsx(Vector3 v1, Vector3 v2, float x)
@@ -355,15 +369,15 @@ public class GameManager : MonoBehaviour
 
     public void Mesure()
     {
-    	Vector3 v1 = holdedThing.GetComponent<Connection>().currDot.transform.position;
-    	Vector3 v2 = holdedThing.GetComponent<Connection>().prevDot.transform.position;
+    	Vector3 v1 = holdedLine.GetComponent<Connection>().currDot.transform.position;
+    	Vector3 v2 = holdedLine.GetComponent<Connection>().prevDot.transform.position;
     	if(yORx)
-    		holdedThing.GetComponent<Connection>().currDot.transform.position = floatToCordsy(v1, v2, float.Parse(mesure_I.text));
+    		holdedLine.GetComponent<Connection>().currDot.transform.position = floatToCordsy(v1, v2, float.Parse(mesure_I.text));
     	else
-    		holdedThing.GetComponent<Connection>().currDot.transform.position = floatToCordsx(v1, v2, float.Parse(mesure_I.text));
+    		holdedLine.GetComponent<Connection>().currDot.transform.position = floatToCordsx(v1, v2, float.Parse(mesure_I.text));
     }
 
-    public static string indexChar(string word, int index)
+    public static string indexCharStart(string word, int index)
     {
     	string newWord = "";
 
@@ -373,63 +387,103 @@ public class GameManager : MonoBehaviour
     	return newWord;
     }
 
-    string saveFile;
+    public static string indexCharEnd(string word, int index)
+    {
+        string newWord = "";
+        int j = 0;
+
+        for(int i = 0; i < index; i++)
+        {
+            j = word.Length - i - 1;
+            newWord += word[j].ToString();
+        }
+
+        return flipWord(newWord);
+    }
+
+    public static string flipWord(string word)
+    {
+        string newWord = "";
+        int j = 0;
+
+        for(int i = 0; i < word.Length; i++)
+        {
+            j = word.Length - i - 1;
+            newWord += word[j].ToString();
+        }
+
+        return newWord;
+    }
+
+    void ClearFile(string fileDir)
+    {
+        string fileContent = File.ReadAllText(fileDir);
+
+        if(fileContent != "")
+            fileContent = fileContent.Replace(fileContent, "");
+    }
 
     public void Save()
     {
-	    if(File.Exists(saveFile))
-	    {
-	    	string str = File.ReadAllText(saveFile);
-			str = str.Replace(str, "");
-    		// File.Delete(saveFile);
-	    }
+	    if(File.Exists(saveFileDir))
+    		ClearFile(saveFileDir);
 
-    	string thingy = "";
+        // File.Delete(saveFileDir);
+
+    	string fileContent = "";
 
     	foreach(GameObject dot in dots)
-    	{
-    		thingy += dot.transform.position.x.ToString()+"\n";
-			thingy += dot.transform.position.y.ToString()+"\n";
-    	}
-    	foreach(GameObject thing in things)
-    		thingy += thing.name + "=" + thing.GetComponent<Connection>().prevDot.name + "+" + thing.GetComponent<Connection>().currDot.name+"\n";
+    		fileContent += dot.transform.position.x.ToString() +"\n" + dot.transform.position.y.ToString() +"\n";
+
+        foreach(GameObject line in lines)
+            fileContent += line.name + "=" + line.GetComponent<Connection>().prevDot.name + "+" + line.GetComponent<Connection>().currDot.name + "\n";
+            
+            // if(line == lines[lines.Count-1])
+            //     fileContent = indexCharStart(fileContent, fileContent.Length-1); // dont have to use cuz u ca&n remove \n in mesure value bellow
+
+        fileContent += "v: " + rotationFractions.ToString() + "\n";
+        fileContent += "v: " + val.ToString() + "\n";
+        fileContent += "v: " + unit.ToString() + "\n";
+        fileContent += "v: " + mesure_I.text;
     	
-    	File.WriteAllText(saveFile, thingy);  
+    	File.WriteAllText(saveFileDir, fileContent);  
     }
 
     void Read()
     {
-    	string[] thingy = File.ReadAllLines(saveFile);
+    	string[] fileContent = File.ReadAllLines(saveFileDir);
+        int coordsMax = 0;
 
-    	int cordsMax = 0;
+        for(int i = 0; i < fileContent.Length; i++)
+        {
+            if(fileContent[i].IndexOf("line") != 0 && fileContent[i].IndexOf("v") != 0)
+                coordsMax++;
+        }
+        for(int i = 0; i < fileContent.Length; i++)
+        {
+            if(i < coordsMax / 2)
+                CreateDot(float.Parse(fileContent[i * 2]), float.Parse(fileContent[(i * 2) + 1]));
+        }
 
-    	for(int i = 0; i < thingy.Length; i++)
-    	{
-    		if(thingy[i].IndexOf("thing")!=0)
-    			cordsMax++;
-    	}
+        List<string> vals = new List<string>();
 
-    	for(int i = 0; i < thingy.Length; i++)
-    	{
-    		if(i < cordsMax/2)
-    			CreateDot(float.Parse(thingy[i*2]), float.Parse(thingy[(i*2)+1]));
-    	}
+        for(int i = 0; i < fileContent.Length; i++)
+        {
+            if(fileContent[i].IndexOf("line") == 0)
+            {
+                string linename = indexCharStart(fileContent[i], fileContent[i].IndexOf("=")) + "=";
+                loadedLines += linename.Replace("=", "&");
+                GameObject dot1 = GameObject.Find(indexCharStart(fileContent[i], fileContent[i].IndexOf("+")).Replace(linename, ""));
+                GameObject dot2 = GameObject.Find(fileContent[i].Replace(indexCharStart(fileContent[i], fileContent[i].IndexOf("+")) + "+", "").Replace(linename, ""));
+                CreateConnection(dot1, dot2, linename.Replace("=", ""));
+            }
+            else if(fileContent[i].IndexOf("v") == 0)
+                vals.Add(fileContent[i].Replace("v: ", "").Replace("\n", ""));
+        }
 
-    	string thingname = "";
-    	GameObject dot1 = null;
-    	GameObject dot2 = null;
-
-    	for(int i = 0; i < thingy.Length; i++)
-    	{
-    		if(thingy[i].IndexOf("thing")==0)
-    		{
-    			thingname = indexChar(thingy[i], thingy[i].IndexOf("=")) + "=";
-    			dot1 = GameObject.Find(indexChar(thingy[i], thingy[i].IndexOf("+")).Replace(thingname, ""));
-    			dot2 = GameObject.Find(thingy[i].Replace(indexChar(thingy[i], thingy[i].IndexOf("+")) + "+", "").Replace(thingname, ""));
-	    		CreateConnection(dot1, dot2, thingname.Replace("=", ""));
-    		}
-	    }
-
-		reading = true;
+        rT_I.text = vals[0];
+        val_I.text = vals[1];
+        unit_I.text = vals[2];
+        mesure_I.text = vals[3];
     }
 }

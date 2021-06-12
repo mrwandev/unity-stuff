@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/blan.unity
+    path: Assets/0_twoDots/Scenes/blan.unity
     guid: 0012c30c1c73dfd4da6c5cec31eb54e5
   m_configObjects: {}

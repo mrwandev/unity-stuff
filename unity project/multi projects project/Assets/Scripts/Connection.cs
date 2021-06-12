@@ -5,21 +5,24 @@ using UnityEngine;
 public class Connection : MonoBehaviour
 {
 	GameManager gameManager;
-	// [HideInInspector]
+	[HideInInspector]
 	public GameObject prevDot, currDot;
 
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        // prevDot = gameManager.prevDot;
-        // currDot = gameManager.currDot;
+        if(!gameManager.loadedLines.Contains(base.gameObject.name))
+        {
+            prevDot = gameManager.prevDot;
+            currDot = gameManager.currDot;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
     	if(gameManager.dots.Count > 1 && prevDot != null && currDot != null)
-    		twoDotsClass.twoDots(prevDot, currDot, this.gameObject, .9f, gameManager.rotationFractions);
+    		twoDotsClass.twoDots(prevDot, currDot, base.gameObject, .9f, gameManager.rotationFractions);
     }
 }
