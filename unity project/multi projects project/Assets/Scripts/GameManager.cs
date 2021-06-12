@@ -8,13 +8,13 @@ using System.IO;
 public class GameManager : MonoBehaviour
 {
 	// public Slider slider;
-	public GameObject prevDot, currDot, square, holdedDot, holdedLine, dotPrefab, linePrefab, textForLinePrefab, lastHoldedDot;
+	public GameObject arrows, hideGO, prevDot, currDot, square, holdedDot, holdedLine, dotPrefab, linePrefab, textForLinePrefab, lastHoldedDot;
 	public TextMeshProUGUI debugText, unit_T, deleteT_T;
 	public TMP_InputField val_I, rT_I, unit_I, mesure_I; 
-	public List<GameObject> dots, lines, texts;
-	bool hold, holding, moveB, yORx;
+	public List<GameObject> dots, lines, texts, uiStuff;
+	bool hold, holding, moveB, yORx, hide;
 	Vector3 pos, touchPos;
-	public float timer, val, maxTimerVal, rotationFractions, unit, odrunit, shownUnit;
+	public float timer, arrowsFloat, val, maxTimerVal, rotationFractions, unit, odrunit, shownUnit;
     public string saveFileDir, loadedLines;
     public Toggle singleDotToggle;
 
@@ -59,7 +59,35 @@ public class GameManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {	
+    {
+    	if(Input.GetKey(KeyCode.RightArrow) || arrowsFloat == 4f)
+    		Camera.main.transform.position += new Vector3(.05f, 0f, 0f);
+
+    	if(Input.GetKey(KeyCode.LeftArrow) || arrowsFloat == 3f)
+    		Camera.main.transform.position += new Vector3(-.05f, 0f, 0f);
+
+    	if(Input.GetKey(KeyCode.UpArrow) || arrowsFloat == 1f)
+    		Camera.main.transform.position += new Vector3(0f, .05f, 0f);
+
+    	if(Input.GetKey(KeyCode.DownArrow) || arrowsFloat == 2f)
+    		Camera.main.transform.position += new Vector3(0f, -.05f, 0f);
+
+    	foreach(GameObject thing in uiStuff)
+    		thing.SetActive(!hide);
+
+    	if(hide)
+    	{
+    		hideGO.GetComponent<RectTransform>().anchoredPosition = new Vector3(106.9f, -81.3f, 0f);
+    		hideGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Show";
+    	}
+    	else
+    	{
+    		hideGO.GetComponent<RectTransform>().anchoredPosition = new Vector3(106.9f, -209.8f, 0f);
+    		hideGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Hide";
+    	}
+    	
+    	arrows.SetActive(hide);
+
         List<GameObject> loadedLinesList = new List<GameObject>();
         string goS = "";
         foreach(char letter in loadedLines)
@@ -125,18 +153,18 @@ public class GameManager : MonoBehaviour
      	Vector3 mousePos = Input.mousePosition;
      	pos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, -Camera.main.transform.position.z));
 
-     	if(Input.touchCount > 0)
-     	{
-    		if(timer > maxTimerVal)
-	    		moveB = true;
-	    	else
-	    		moveB = false;
-     	}
+     // 	if(Input.touchCount > 0)
+     // 	{
+    	// 	if(timer > maxTimerVal)
+	    // 		moveB = true;
+	    // 	else
+	    // 		moveB = false;
+     // 	}
 
-     	if(moveB)
-   			Camera.main.transform.position = new Vector3(pos.x*0.5f, pos.y*0.5f, -val);
-   		else
-    		Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -val);
+     // 	if(moveB)
+   		// 	Camera.main.transform.position = new Vector3(pos.x*0.5f, pos.y*0.5f, -val);
+   		// else
+    	// 	Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -val);
 
     	// if(dots.Count > 1)
     	// {
@@ -444,9 +472,27 @@ public class GameManager : MonoBehaviour
         fileContent += "v: " + rotationFractions.ToString() + "\n";
         fileContent += "v: " + val.ToString() + "\n";
         fileContent += "v: " + unit.ToString() + "\n";
-        fileContent += "v: " + mesure_I.text;
+        fileContent += "v: " + mesure_I.text + "\n";
+        fileContent += "v: " + hide.ToString();
     	
     	File.WriteAllText(saveFileDir, fileContent);  
+    }
+
+    public void Arrows(string dir)
+    {
+    	if(dir == "u")
+    		arrowsFloat = 1f;
+    	if(dir == "d")
+    		arrowsFloat = 2f;
+    	if(dir == "l")
+    		arrowsFloat = 3f;
+    	if(dir == "r")
+    		arrowsFloat = 4f;
+    }
+
+    public void Hide()
+    {
+    	hide = !hide;
     }
 
     void Read()
@@ -485,5 +531,6 @@ public class GameManager : MonoBehaviour
         val_I.text = vals[1];
         unit_I.text = vals[2];
         mesure_I.text = vals[3];
+        hide = vals[4] == "True";
     }
 }
