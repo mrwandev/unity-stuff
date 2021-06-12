@@ -7,14 +7,14 @@ using System.IO;
 
 public class GameManager : MonoBehaviour
 {
-	// public Slider slider;
-	public GameObject arrows, hideGO, prevDot, currDot, square, holdedDot, holdedLine, dotPrefab, linePrefab, textForLinePrefab, lastHoldedDot;
-	public TextMeshProUGUI debugText, unit_T, deleteT_T;
-	public TMP_InputField val_I, rT_I, unit_I, mesure_I; 
-	public List<GameObject> dots, lines, texts, uiStuff;
-	bool hold, holding, moveB, yORx, hide;
-	Vector3 pos, touchPos;
-	public float timer, arrowsFloat, val, maxTimerVal, rotationFractions, unit, odrunit, shownUnit;
+    // public Slider slider;
+    public GameObject arrows, hideGO, prevDot, currDot, square, holdedDot, holdedLine, dotPrefab, linePrefab, textForLinePrefab, lastHoldedDot;
+    public TextMeshProUGUI debugText, unit_T, deleteT_T;
+    public TMP_InputField val_I, rT_I, unit_I, mesure_I; 
+    public List<GameObject> dots, lines, texts, uiStuff;
+    bool hold, holding, moveB, yORx, hide;
+    Vector3 pos, touchPos;
+    public float timer, arrowsFloat, val, maxTimerVal, rotationFractions, unit, odrunit, shownUnit;
     public string saveFileDir, loadedLines;
     public Toggle singleDotToggle;
 
@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
         SetVars();
 
         if(File.Exists(saveFileDir))
-    	   Read();
+           Read();
     }
 
     void SaveFileDir(string fileName)
@@ -60,33 +60,33 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-    	if(Input.GetKey(KeyCode.RightArrow) || arrowsFloat == 4f)
-    		Camera.main.transform.position += new Vector3(.05f, 0f, 0f);
+        if(Input.GetKey(KeyCode.RightArrow) || arrowsFloat == 4f)
+            Camera.main.transform.position += new Vector3(.05f, 0f, 0f);
 
-    	if(Input.GetKey(KeyCode.LeftArrow) || arrowsFloat == 3f)
-    		Camera.main.transform.position += new Vector3(-.05f, 0f, 0f);
+        if(Input.GetKey(KeyCode.LeftArrow) || arrowsFloat == 3f)
+            Camera.main.transform.position += new Vector3(-.05f, 0f, 0f);
 
-    	if(Input.GetKey(KeyCode.UpArrow) || arrowsFloat == 1f)
-    		Camera.main.transform.position += new Vector3(0f, .05f, 0f);
+        if(Input.GetKey(KeyCode.UpArrow) || arrowsFloat == 1f)
+            Camera.main.transform.position += new Vector3(0f, .05f, 0f);
 
-    	if(Input.GetKey(KeyCode.DownArrow) || arrowsFloat == 2f)
-    		Camera.main.transform.position += new Vector3(0f, -.05f, 0f);
+        if(Input.GetKey(KeyCode.DownArrow) || arrowsFloat == 2f)
+            Camera.main.transform.position += new Vector3(0f, -.05f, 0f);
 
-    	foreach(GameObject thing in uiStuff)
-    		thing.SetActive(!hide);
+        foreach(GameObject thing in uiStuff)
+            thing.SetActive(!hide);
 
-    	if(hide)
-    	{
-    		hideGO.GetComponent<RectTransform>().anchoredPosition = new Vector3(106.9f, -81.3f, 0f);
-    		hideGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Show";
-    	}
-    	else
-    	{
-    		hideGO.GetComponent<RectTransform>().anchoredPosition = new Vector3(106.9f, -209.8f, 0f);
-    		hideGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Hide";
-    	}
-    	
-    	arrows.SetActive(hide);
+        if(hide)
+        {
+            hideGO.GetComponent<RectTransform>().anchoredPosition = new Vector3(106.9f, -81.3f, 0f);
+            hideGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Show";
+        }
+        else
+        {
+            hideGO.GetComponent<RectTransform>().anchoredPosition = new Vector3(106.9f, -209.8f, 0f);
+            hideGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Hide";
+        }
+        
+        arrows.SetActive(hide);
 
         List<GameObject> loadedLinesList = new List<GameObject>();
         string goS = "";
@@ -106,189 +106,189 @@ public class GameManager : MonoBehaviour
                 loadedLines = loadedLines.Replace(go.name + "&", "");
         }
 
-    	// if(dots.Count > 1)
-    	// {
-    	// 	for(int i = 0; i < dots.Count-1; i++)
-    	// 		twoDotsClass.twoDots(dots[i], dots[i+1], lines[i], .9f, rotationFractions);
-    	// }
-    	
-    	unit_T.text = "1 unit = " + unit.ToString() + "m";
+        // if(dots.Count > 1)
+        // {
+        //  for(int i = 0; i < dots.Count-1; i++)
+        //      twoDotsClass.twoDots(dots[i], dots[i+1], lines[i], .9f, rotationFractions);
+        // }
+        
+        unit_T.text = "1 unit = " + unit.ToString() + "m";
 
-    	if(float.Parse(val_I.text) != 0f)
-			val = float.Parse(val_I.text);
+        if(float.Parse(val_I.text) != 0f)
+            val = float.Parse(val_I.text);
 
-    	rotationFractions = float.Parse(rT_I.text);
-    	unit = float.Parse(unit_I.text);
-    	shownUnit = unit/1.09f;
+        rotationFractions = float.Parse(rT_I.text);
+        unit = float.Parse(unit_I.text);
+        shownUnit = unit/1.09f;
 
         // debugText.text = Application.dataPath + "/" + "data.mrwan" + "\n" + 
-        //     			  Application.persistentDataPath + "/" + "data.mrwan" + "\n" +
-        //     			  Application.streamingAssetsPath + "/" + "data.mrwan";
+        //                Application.persistentDataPath + "/" + "data.mrwan" + "\n" +
+        //                Application.streamingAssetsPath + "/" + "data.mrwan";
 
         debugText.text = saveFileDir;
 
-    	// if(Input.touchCount > 0 && timer < maxTimerVal && !hold || Input.touchCount > 0 && timer < maxTimerVal && !holding)
-    	// 	debugText.text = timer.ToString();
-    	// else
-    	// 	debugText.text = "nothing";
+        // if(Input.touchCount > 0 && timer < maxTimerVal && !hold || Input.touchCount > 0 && timer < maxTimerVal && !holding)
+        //  debugText.text = timer.ToString();
+        // else
+        //  debugText.text = "nothing";
 
-    	// if(Input.touchCount == 1 && !hold || Input.touchCount == 1 && !holding || Input.GetKey(KeyCode.A) && !hold || Input.GetKey(KeyCode.A) && !holding)
-    	// {
-    	// 	timer += Time.deltaTime;
-    	// 	if(timer > maxTimerVal)
-    	// 		debugText.text = "move";
-    	// }
-    	// else
-    	// 	timer = 0f;
+        // if(Input.touchCount == 1 && !hold || Input.touchCount == 1 && !holding || Input.GetKey(KeyCode.A) && !hold || Input.GetKey(KeyCode.A) && !holding)
+        // {
+        //  timer += Time.deltaTime;
+        //  if(timer > maxTimerVal)
+        //      debugText.text = "move";
+        // }
+        // else
+        //  timer = 0f;
 
-    	// if(Input.touchCount > 1)
-    	// {
-    		// if(Input.GetTouch(0).)
-    		// {
-    		// 	val = Vector3.Distance(,);
-    		// }
-     		// square.transform.position = pos;
-    	// }
+        // if(Input.touchCount > 1)
+        // {
+            // if(Input.GetTouch(0).)
+            // {
+            //  val = Vector3.Distance(,);
+            // }
+            // square.transform.position = pos;
+        // }
 
-     	Vector3 mousePos = Input.mousePosition;
-     	pos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, -Camera.main.transform.position.z));
+        Vector3 mousePos = Input.mousePosition;
+        pos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, -Camera.main.transform.position.z));
 
-     // 	if(Input.touchCount > 0)
-     // 	{
-    	// 	if(timer > maxTimerVal)
-	    // 		moveB = true;
-	    // 	else
-	    // 		moveB = false;
-     // 	}
+     //     if(Input.touchCount > 0)
+     //     {
+        //  if(timer > maxTimerVal)
+        //      moveB = true;
+        //  else
+        //      moveB = false;
+     //     }
 
-     // 	if(moveB)
-   		// 	Camera.main.transform.position = new Vector3(pos.x*0.5f, pos.y*0.5f, -val);
-   		// else
-    	// 	Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -val);
+     //     if(moveB)
+        //  Camera.main.transform.position = new Vector3(pos.x*0.5f, pos.y*0.5f, -val);
+        // else
+        //  Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -val);
 
-    	// if(dots.Count > 1)
-    	// {
-    	// 	for(int i = 0; i < dots.Count-1; i++)
-    	// 		twoDotsClass.twoDots(dots[i], dots[i+1], lines[i], .9f, rotationFractions);
-    	// }
+        // if(dots.Count > 1)
+        // {
+        //  for(int i = 0; i < dots.Count-1; i++)
+        //      twoDotsClass.twoDots(dots[i], dots[i+1], lines[i], .9f, rotationFractions);
+        // }
 
-     	if(dots.Count < 1)
-     		return;
+        if(dots.Count < 1)
+            return;
 
-     	foreach(GameObject line in lines)
-     	{
-     		if(GameObject.Find("text"+line.name.Replace("line", "")) == null)
-     		{
-     			GameObject text = Instantiate(textForLinePrefab);
-     			text.name = "text" + (dots.Count-1).ToString();
-     			texts.Add(text);
-     		}
-     		else 
-     		{
-     			GameObject text = GameObject.Find("text"+line.name.Replace("line", ""));
-     			text.transform.position = new Vector3(line.transform.position.x, line.transform.position.y, -0.2f);
-     			text.transform.eulerAngles = new Vector3(0f, 0f, line.transform.eulerAngles.z);
-     			odrunit = line.transform.localScale.x/unit*10.9f/10f;
-     			text.GetComponent<TextMesh>().text = (odrunit/1.09f).ToString("F3");
-     			if(line == holdedLine)
-     				deleteT_T.text = holdedLine.name + ":" + "\n" + (odrunit/1.09f).ToString("F3");
-     		}
-     	}
+        foreach(GameObject line in lines)
+        {
+            if(GameObject.Find("text"+line.name.Replace("line", "")) == null)
+            {
+                GameObject text = Instantiate(textForLinePrefab);
+                text.name = "text" + (dots.Count-1).ToString();
+                texts.Add(text);
+            }
+            else 
+            {
+                GameObject text = GameObject.Find("text"+line.name.Replace("line", ""));
+                text.transform.position = new Vector3(line.transform.position.x, line.transform.position.y, -0.2f);
+                text.transform.eulerAngles = new Vector3(0f, 0f, line.transform.eulerAngles.z);
+                odrunit = line.transform.localScale.x/unit*10.9f/10f;
+                text.GetComponent<TextMesh>().text = (odrunit/1.09f).ToString("F3");
+                if(line == holdedLine)
+                    deleteT_T.text = holdedLine.name + ":" + "\n" + (odrunit/1.09f).ToString("F3");
+            }
+        }
 
         bool CloseToVector3(Vector3 v1, Vector3 v2)
         {
             return Mathf.Round(v2.x) == Mathf.Round(v1.x) && Mathf.Round(v2.y) == Mathf.Round(v1.y);
         }
 
- 		foreach(GameObject dot in dots)
-     	{
-     		hold = CloseToVector3(dot.transform.position, pos);
+        foreach(GameObject dot in dots)
+        {
+            hold = CloseToVector3(dot.transform.position, pos);
 
-     		if(Input.GetKeyUp(KeyCode.Mouse0) || !hold)
-     			dot.GetComponent<SpriteRenderer>().color = Color.white;
+            if(Input.GetKeyUp(KeyCode.Mouse0) || !hold)
+                dot.GetComponent<SpriteRenderer>().color = Color.white;
 
-     		if(hold)
-     			holdedDot = dot;
+            if(hold)
+                holdedDot = dot;
 
-     		if(Input.GetKeyUp(KeyCode.Mouse0))
-     			holding = false;
+            if(Input.GetKeyUp(KeyCode.Mouse0))
+                holding = false;
 
-     		if(hold && Input.GetKey(KeyCode.Mouse0))
-     		{
-     			prevDot = dot;
-     			lastHoldedDot = dot;
-     			holding = true;
-     		}
+            if(hold && Input.GetKey(KeyCode.Mouse0))
+            {
+                prevDot = dot;
+                lastHoldedDot = dot;
+                holding = true;
+            }
 
-     		if(holding && holdedDot!=null)
-     		{
-     			holdedDot.transform.position = pos;
-     			holdedDot.GetComponent<SpriteRenderer>().color = Color.red;
-     			return;
-     		}
-     		
+            if(holding && holdedDot!=null)
+            {
+                holdedDot.transform.position = pos;
+                holdedDot.GetComponent<SpriteRenderer>().color = Color.red;
+                return;
+            }
+            
             holdedDot = null;
 
-     		if(hold)
-     			dot.GetComponent<SpriteRenderer>().color = Color.green;
-     	}
+            if(hold)
+                dot.GetComponent<SpriteRenderer>().color = Color.green;
+        }
 
-     	foreach(GameObject line in lines)
-     	{
-     		hold = CloseToVector3(line.transform.position, pos);
+        foreach(GameObject line in lines)
+        {
+            hold = CloseToVector3(line.transform.position, pos);
 
-     		if(Input.GetKeyUp(KeyCode.Mouse0) || !hold)
-     			line.GetComponent<SpriteRenderer>().color = Color.white;
+            if(Input.GetKeyUp(KeyCode.Mouse0) || !hold)
+                line.GetComponent<SpriteRenderer>().color = Color.white;
 
-     		if(hold && Input.GetKey(KeyCode.Mouse0))
-     			holdedLine = line;
+            if(hold && Input.GetKey(KeyCode.Mouse0))
+                holdedLine = line;
 
-     		if(Input.GetKeyUp(KeyCode.Mouse0))
-     			holding = false;
+            if(Input.GetKeyUp(KeyCode.Mouse0))
+                holding = false;
 
-     		if(hold && Input.GetKey(KeyCode.Mouse0))
-     			holding = true;
+            if(hold && Input.GetKey(KeyCode.Mouse0))
+                holding = true;
 
-     		if(holding)
-     		{
-     			holdedLine.GetComponent<SpriteRenderer>().color = Color.red;
-     			break;
-     		}
+            if(holding)
+            {
+                holdedLine.GetComponent<SpriteRenderer>().color = Color.red;
+                break;
+            }
 
-     		if(hold)
-     			line.GetComponent<SpriteRenderer>().color = Color.green;
-     	}
+            if(hold)
+                line.GetComponent<SpriteRenderer>().color = Color.green;
+        }
     }
 
     public void CreateDot()
     {
-    	GameObject newDot = Instantiate(dotPrefab);
-    	newDot.name = "dot"+ dots.Count;
-    	dots.Add(newDot);
+        GameObject newDot = Instantiate(dotPrefab);
+        newDot.name = "dot"+ dots.Count;
+        dots.Add(newDot);
 
-    	if(dots.Count == 1)
-    		lastHoldedDot = newDot;
+        if(dots.Count == 1)
+            lastHoldedDot = newDot;
 
-    	if(dots.Count > 1 && !singleDotToggle.isOn)
-    	{
-    		newDot.transform.position = new Vector3(dots[dots.Count-2].transform.position.x + 3f, dots[dots.Count-2].transform.position.y + 0f, 0f);
-    		currDot = newDot;
-    		if(prevDot == currDot || prevDot == null)
-    			prevDot = dots[System.Convert.ToInt32(newDot.name.Replace("dot", ""))-1];
-    		GameObject newLine = Instantiate(linePrefab);
-    		newLine.name = "line"+ (dots.Count-1).ToString();
-    		newLine.AddComponent<Connection>();
-    		lines.Add(newLine);
-    		holdedLine = newLine;
-    	}
+        if(dots.Count > 1 && !singleDotToggle.isOn)
+        {
+            newDot.transform.position = new Vector3(dots[dots.Count-2].transform.position.x + 3f, dots[dots.Count-2].transform.position.y + 0f, 0f);
+            currDot = newDot;
+            if(prevDot == currDot || prevDot == null)
+                prevDot = dots[System.Convert.ToInt32(newDot.name.Replace("dot", ""))-1];
+            GameObject newLine = Instantiate(linePrefab);
+            newLine.name = "line"+ (dots.Count-1).ToString();
+            newLine.AddComponent<Connection>();
+            lines.Add(newLine);
+            holdedLine = newLine;
+        }
     }
 
     public void CreateDot(float x, float y)
     {
-    	GameObject newDot = Instantiate(dotPrefab);
-    	newDot.name = "dot"+ dots.Count;
-    	dots.Add(newDot);
-    	newDot.transform.position = new Vector3(x, y, 0f);
+        GameObject newDot = Instantiate(dotPrefab);
+        newDot.name = "dot"+ dots.Count;
+        dots.Add(newDot);
+        newDot.transform.position = new Vector3(x, y, 0f);
     }
 
     public void CreateConnection(GameObject _prevDot, GameObject _currDot, string linename)
@@ -388,31 +388,31 @@ public class GameManager : MonoBehaviour
 
     public void yORxF(bool y)
     {
-    	if(y)
-    		yORx = true;
-    	else
-    		yORx = false;
+        if(y)
+            yORx = true;
+        else
+            yORx = false;
     }
 
 
     public void Mesure()
     {
-    	Vector3 v1 = holdedLine.GetComponent<Connection>().currDot.transform.position;
-    	Vector3 v2 = holdedLine.GetComponent<Connection>().prevDot.transform.position;
-    	if(yORx)
-    		holdedLine.GetComponent<Connection>().currDot.transform.position = floatToCordsy(v1, v2, float.Parse(mesure_I.text));
-    	else
-    		holdedLine.GetComponent<Connection>().currDot.transform.position = floatToCordsx(v1, v2, float.Parse(mesure_I.text));
+        Vector3 v1 = holdedLine.GetComponent<Connection>().currDot.transform.position;
+        Vector3 v2 = holdedLine.GetComponent<Connection>().prevDot.transform.position;
+        if(yORx)
+            holdedLine.GetComponent<Connection>().currDot.transform.position = floatToCordsy(v1, v2, float.Parse(mesure_I.text));
+        else
+            holdedLine.GetComponent<Connection>().currDot.transform.position = floatToCordsx(v1, v2, float.Parse(mesure_I.text));
     }
 
     public static string indexCharStart(string word, int index)
     {
-    	string newWord = "";
+        string newWord = "";
 
-    	for(int i = 0; i < index; i++)
-    		newWord += word[i].ToString();
+        for(int i = 0; i < index; i++)
+            newWord += word[i].ToString();
 
-    	return newWord;
+        return newWord;
     }
 
     public static string indexCharEnd(string word, int index)
@@ -453,15 +453,15 @@ public class GameManager : MonoBehaviour
 
     public void Save()
     {
-	    if(File.Exists(saveFileDir))
-    		ClearFile(saveFileDir);
+        if(File.Exists(saveFileDir))
+            ClearFile(saveFileDir);
 
         // File.Delete(saveFileDir);
 
-    	string fileContent = "";
+        string fileContent = "";
 
-    	foreach(GameObject dot in dots)
-    		fileContent += dot.transform.position.x.ToString() +"\n" + dot.transform.position.y.ToString() +"\n";
+        foreach(GameObject dot in dots)
+            fileContent += dot.transform.position.x.ToString() +"\n" + dot.transform.position.y.ToString() +"\n";
 
         foreach(GameObject line in lines)
             fileContent += line.name + "=" + line.GetComponent<Connection>().prevDot.name + "+" + line.GetComponent<Connection>().currDot.name + "\n";
@@ -474,30 +474,30 @@ public class GameManager : MonoBehaviour
         fileContent += "v: " + unit.ToString() + "\n";
         fileContent += "v: " + mesure_I.text + "\n";
         fileContent += "v: " + hide.ToString();
-    	
-    	File.WriteAllText(saveFileDir, fileContent);  
+        
+        File.WriteAllText(saveFileDir, fileContent);  
     }
 
     public void Arrows(string dir)
     {
-    	if(dir == "u")
-    		arrowsFloat = 1f;
-    	if(dir == "d")
-    		arrowsFloat = 2f;
-    	if(dir == "l")
-    		arrowsFloat = 3f;
-    	if(dir == "r")
-    		arrowsFloat = 4f;
+        if(dir == "u")
+            arrowsFloat = 1f;
+        if(dir == "d")
+            arrowsFloat = 2f;
+        if(dir == "l")
+            arrowsFloat = 3f;
+        if(dir == "r")
+            arrowsFloat = 4f;
     }
 
     public void Hide()
     {
-    	hide = !hide;
+        hide = !hide;
     }
 
     void Read()
     {
-    	string[] fileContent = File.ReadAllLines(saveFileDir);
+        string[] fileContent = File.ReadAllLines(saveFileDir);
         int coordsMax = 0;
 
         for(int i = 0; i < fileContent.Length; i++)
