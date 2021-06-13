@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,15 +8,20 @@ using System.IO;
 public class GameManager : MonoBehaviour
 {
 	// public Slider slider;
-	public GameObject arrows, hideGO, prevDot, currDot, square, holdedDot, holdedLine, dotPrefab, linePrefab, textForLinePrefab, lastHoldedDot;
-	public TextMeshProUGUI debugText, unit_T, deleteT_T;
-	public TMP_InputField val_I, rT_I, unit_I, mesure_I;
-	public List<GameObject> dots, lines, texts, uiStuff;
-	bool hold, holding, moveB, yORx, hide;
-	Vector3 pos, touchPos;
-	public float timer, arrowsFloat, val, maxTimerVal, rotationFractions, unit, odrunit, shownUnit;
+	public GameObject dot1, dot2, dotPrefab, linePrefab, textForLinePrefab, arrows, hideButtonGo, hideTButtonGo;
+	public TextMeshProUGUI debugText, unit_Text, deleteLine_Text, holdedDot_Text;
+	public TMP_InputField val_Input, roTFrac_Input, unit_Input, mesure_Input;
 	public string saveFileDir, loadedLines;
 	public Toggle singleDotToggle;
+	public List<GameObject> dots, lines, texts, uiStuff;
+	[HideInInspector]
+	public GameObject prevDot, currDot, square, holdedDot, holdedLine, lastHoldedDot;
+	[HideInInspector]
+	public float timer, arrowsFloat, val, maxTimerVal, rotationFractions, unit, odrunit, shownUnit;
+	bool hold, holding, moveB, yORx, hide, link;
+	// [HideInInspector]
+	public bool ctrl;
+	Vector3 pos, touchPos;
 
 	// Start is called before the first frame update
 	void Start()
@@ -56,10 +61,10 @@ public class GameManager : MonoBehaviour
 		unit = 1.09f;
 		shownUnit = 1f;
 
-		val_I.text = val.ToString();
-		rT_I.text = rotationFractions.ToString();
-		unit_I.text = shownUnit.ToString();
-		mesure_I.text = "0";
+		val_Input.text = val.ToString();
+		roTFrac_Input.text = rotationFractions.ToString();
+		unit_Input.text = shownUnit.ToString();
+		mesure_Input.text = "0";
 
 		maxTimerVal = .3f;
 	}
@@ -67,6 +72,54 @@ public class GameManager : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if(dot2 != null)
+			dot2.GetComponent<SpriteRenderer>().color = Color.yellow;
+
+		dot1 = lastHoldedDot;
+
+		if(link)
+		{
+			if(dot1 == dot2)
+				return;
+
+			GameObject dot1L = null;
+			GameObject dot2L = null;
+			GameObject lineToDel = null;
+
+			foreach(GameObject line in lines)
+			{
+				if(line.GetComponent<Connection>().currDot == dot1)
+					dot1L = line;
+
+				if(line.GetComponent<Connection>().prevDot == dot2)
+					dot2L = line;
+
+				if(line.GetComponent<Connection>().prevDot == dot1)
+					lineToDel = line;
+			}
+			
+			dots.Remove(dot2L.GetComponent<Connection>().prevDot);
+			Destroy(dot2L.GetComponent<Connection>().prevDot);
+
+			if(lineToDel != null)
+			{
+				lines.Remove(lineToDel);
+				Destroy(lineToDel);
+				Destroy(GameObject.Find("text" + lineToDel.name.Replace("line", "")));
+				texts.Remove(GameObject.Find("text" + lineToDel.name.Replace("line", "")));
+			}
+
+			dot2L.GetComponent<Connection>().prevDot = dot1L.GetComponent<Connection>().currDot;
+			dot2 = null;
+
+			link = false;
+		}
+
+		// if(!GameObject.Find("text" + holdedLine.name.Replace("line", "")).GetComponent<MeshRenderer>().enabled)
+		// 	hideTButtonGo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Show text";
+		// else
+		// 	hideTButtonGo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Hide text";
+
 		if(Input.GetKey(KeyCode.RightArrow) || arrowsFloat == 4f)
 			Camera.main.transform.position += new Vector3(.05f, 0f, 0f);
 
@@ -87,13 +140,13 @@ public class GameManager : MonoBehaviour
 
 		if(hide)
 		{
-			hideGO.GetComponent<RectTransform>().anchoredPosition = new Vector3(106.9f, -81.3f, 0f);
-			hideGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Show";
+			hideButtonGo.GetComponent<RectTransform>().anchoredPosition = new Vector3(106.9f, -81.3f, 0f);
+			hideButtonGo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Show";
 		}
 		else
 		{
-			hideGO.GetComponent<RectTransform>().anchoredPosition = new Vector3(106.9f, -209.8f, 0f);
-			hideGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Hide";
+			hideButtonGo.GetComponent<RectTransform>().anchoredPosition = new Vector3(106.9f, -209.8f, 0f);
+			hideButtonGo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Hide";
 		}
 
 		arrows.SetActive(hide);
@@ -122,13 +175,13 @@ public class GameManager : MonoBehaviour
 		//      twoDotsClass.twoDots(dots[i], dots[i+1], lines[i], .9f, rotationFractions);
 		// }
 
-		unit_T.text = "1 unit = " + unit.ToString() + "m";
+		unit_Text.text = "1 unit = " + unit.ToString() + "m";
 
-		if(float.Parse(val_I.text) != 0f)
-			val = float.Parse(val_I.text);
+		if(float.Parse(val_Input.text) != 0f)
+			val = float.Parse(val_Input.text);
 
-		rotationFractions = float.Parse(rT_I.text);
-		unit = float.Parse(unit_I.text);
+		rotationFractions = float.Parse(roTFrac_Input.text);
+		unit = float.Parse(unit_Input.text);
 		shownUnit = unit/1.09f;
 
 		// debugText.text = Application.dataPath + "/" + "data.mrwan" + "\n" +
@@ -190,7 +243,7 @@ public class GameManager : MonoBehaviour
 			if(GameObject.Find("text"+line.name.Replace("line", "")) == null)
 			{
 				GameObject text = Instantiate(textForLinePrefab);
-				text.name = "text" + (dots.Count-1).ToString();
+				text.name = "text" + (System.Convert.ToInt32(dots[dots.Count-1].name.Replace("dot", ""))).ToString();
 				texts.Add(text);
 			}
 			else
@@ -201,24 +254,25 @@ public class GameManager : MonoBehaviour
 				odrunit = line.transform.localScale.x/unit*10.9f/10f;
 				text.GetComponent<TextMesh>().text = (odrunit/1.09f).ToString("F3");
 				if(line == holdedLine)
-					deleteT_T.text = holdedLine.name + ":" + "\n" + (odrunit/1.09f).ToString("F3");
+					deleteLine_Text.text = holdedLine.name + ":" + "\n" + (odrunit/1.09f).ToString("F3");
 			}
-		}
-
-		bool CloseToVector3(Vector3 v1, Vector3 v2)
-		{
-			return Mathf.Round(v2.x) == Mathf.Round(v1.x) && Mathf.Round(v2.y) == Mathf.Round(v1.y);
 		}
 
 		foreach(GameObject dot in dots)
 		{
 			hold = CloseToVector3(dot.transform.position, pos);
 
-			if(Input.GetKeyUp(KeyCode.Mouse0) || !hold)
+			if(Input.GetKeyUp(KeyCode.Mouse0) && dot != dot2 || !hold && dot != dot2)
 				dot.GetComponent<SpriteRenderer>().color = Color.white;
 
 			if(hold)
 				holdedDot = dot;
+
+			if(hold && ctrl)
+			{
+				dot2 = dot;
+				dot2.GetComponent<SpriteRenderer>().color = Color.yellow;
+			}
 
 			if(Input.GetKeyUp(KeyCode.Mouse0))
 				holding = false;
@@ -227,8 +281,23 @@ public class GameManager : MonoBehaviour
 			{
 				prevDot = dot;
 				lastHoldedDot = dot;
+				holdedDot_Text.text = lastHoldedDot.name;
 				holding = true;
+
+				// if(link)
+				// 	newLastHoldedDot = dot;
 			}
+			if(hold && Input.GetKey(KeyCode.Mouse1))
+			{
+				prevDot = dot;
+				lastHoldedDot = dot;
+				holdedDot_Text.text = lastHoldedDot.name;
+				// if(link)
+				// 	newLastHoldedDot = dot;
+			}
+			
+			if(lastHoldedDot!=null)
+				lastHoldedDot.GetComponent<SpriteRenderer>().color = Color.yellow;
 
 			if(holding && holdedDot!=null)
 			{
@@ -239,7 +308,7 @@ public class GameManager : MonoBehaviour
 
 			holdedDot = null;
 
-			if(hold)
+			if(hold && !ctrl)
 				dot.GetComponent<SpriteRenderer>().color = Color.green;
 		}
 
@@ -270,10 +339,20 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	public void LinkTwoDots()
+	{
+		link = !link;
+	}
+
+	bool CloseToVector3(Vector3 v1, Vector3 v2)
+	{
+		return Mathf.Round(v2.x) == Mathf.Round(v1.x) && Mathf.Round(v2.y) == Mathf.Round(v1.y);
+	}
+
 	public void CreateDot()
 	{
 		GameObject newDot = Instantiate(dotPrefab);
-		newDot.name = "dot"+ dots.Count;
+		newDot.name = "dot" + (System.Convert.ToInt32(dots[dots.Count-1].name.Replace("dot", "")) + 1).ToString();
 		dots.Add(newDot);
 
 		if(dots.Count == 1)
@@ -286,17 +365,17 @@ public class GameManager : MonoBehaviour
 			if(prevDot == currDot || prevDot == null)
 				prevDot = dots[System.Convert.ToInt32(newDot.name.Replace("dot", ""))-1];
 			GameObject newLine = Instantiate(linePrefab);
-			newLine.name = "line"+ (dots.Count-1).ToString();
+			newLine.name = "line" + (System.Convert.ToInt32(dots[dots.Count-1].name.Replace("dot", ""))).ToString();
 			newLine.AddComponent<Connection>();
 			lines.Add(newLine);
 			holdedLine = newLine;
 		}
 	}
 
-	public void CreateDot(float x, float y)
+	public void CreateDot(float x, float y, int dotIndex)
 	{
 		GameObject newDot = Instantiate(dotPrefab);
-		newDot.name = "dot"+ dots.Count;
+		newDot.name = "dot"+ dotIndex.ToString();
 		dots.Add(newDot);
 		newDot.transform.position = new Vector3(x, y, 0f);
 	}
@@ -330,7 +409,7 @@ public class GameManager : MonoBehaviour
 					text.GetComponent<TextMesh>().text = (odrunit / 1.09f).ToString("F3");
 
 					if(line == holdedLine)
-						deleteT_T.text = holdedLine.name + ":\n" + (odrunit / 1.09f).ToString("F3");
+						deleteLine_Text.text = holdedLine.name + ":\n" + (odrunit / 1.09f).ToString("F3");
 				}
 			}
 		}
@@ -386,33 +465,31 @@ public class GameManager : MonoBehaviour
 		texts.Remove(GameObject.Find("text" + holdedLine.name.Replace("line", "")));
 	}
 
-	Vector3 floatToCordsx(Vector3 v1, Vector3 v2, float x)
-	{
-		return new Vector3(v2.x + x + .9f, v2.y, v1.z);
-	}
-
-	Vector3 floatToCordsy(Vector3 v1, Vector3 v2, float x)
-	{
-		return new Vector3(v2.x, v2.y + x + .9f, v1.z);
-	}
-
-	public void yORxF(bool y)
-	{
-		if(y)
-			yORx = true;
-		else
-			yORx = false;
-	}
-
-
-	public void Mesure()
+	public void Mesure(string dir)
 	{
 		Vector3 v1 = holdedLine.GetComponent<Connection>().currDot.transform.position;
 		Vector3 v2 = holdedLine.GetComponent<Connection>().prevDot.transform.position;
-		if(yORx)
-			holdedLine.GetComponent<Connection>().currDot.transform.position = floatToCordsy(v1, v2, float.Parse(mesure_I.text));
+		if(dir == "r")
+			holdedLine.GetComponent<Connection>().currDot.transform.position = new Vector3(v2.x+.9f+float.Parse(mesure_Input.text), v2.y, v1.z);
+		if(dir == "l")
+			holdedLine.GetComponent<Connection>().currDot.transform.position = new Vector3(+v2.x-.9f-float.Parse(mesure_Input.text), v2.y, v1.z);
+		if(dir == "u")
+			holdedLine.GetComponent<Connection>().currDot.transform.position = new Vector3(v2.x, v2.y+float.Parse(mesure_Input.text)+.9f, v1.z);
+		if(dir == "d")
+			holdedLine.GetComponent<Connection>().currDot.transform.position = new Vector3(v2.x, v2.y-float.Parse(mesure_Input.text)-.9f, v1.z);
+	}
+
+	public void HideText()
+	{
+		MeshRenderer text = null;
+		text = GameObject.Find("text" + holdedLine.name.Replace("line", "")).GetComponent<MeshRenderer>();
+
+		GameObject.Find("text" + holdedLine.name.Replace("line", "")).GetComponent<MeshRenderer>().enabled = !text.enabled;
+
+		if(!text.enabled)
+			hideTButtonGo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Show text";
 		else
-			holdedLine.GetComponent<Connection>().currDot.transform.position = floatToCordsx(v1, v2, float.Parse(mesure_I.text));
+			hideTButtonGo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Hide text";
 	}
 
 	public static string indexCharStart(string word, int index)
@@ -471,6 +548,9 @@ public class GameManager : MonoBehaviour
 		string fileContent = "";
 
 		foreach(GameObject dot in dots)
+			fileContent += "i: " + dot.name.Replace("dot", "")+"\n";
+
+		foreach(GameObject dot in dots)
 			fileContent += dot.transform.position.x.ToString() +"\n" + dot.transform.position.y.ToString() +"\n";
 
 		foreach(GameObject line in lines)
@@ -482,9 +562,9 @@ public class GameManager : MonoBehaviour
 		fileContent += "v: " + rotationFractions.ToString() + "\n";
 		fileContent += "v: " + val.ToString() + "\n";
 		fileContent += "v: " + unit.ToString() + "\n";
-		fileContent += "v: " + mesure_I.text + "\n";
-		fileContent += "v: " + hide.ToString();
-		fileContent += "v: " + Camera.main.transform.position.x.ToString();
+		fileContent += "v: " + mesure_Input.text + "\n";
+		fileContent += "v: " + hide.ToString() + "\n";
+		fileContent += "v: " + Camera.main.transform.position.x.ToString() + "\n";
 		fileContent += "v: " + Camera.main.transform.position.y.ToString();
 
 		File.WriteAllText(saveFileDir, fileContent);
@@ -512,15 +592,25 @@ public class GameManager : MonoBehaviour
 		string[] fileContent = File.ReadAllLines(saveFileDir);
 		int coordsMax = 0;
 
+		List<int> indexes = new List<int>();
+
+
 		for(int i = 0; i < fileContent.Length; i++)
 		{
-			if(fileContent[i].IndexOf("line") != 0 && fileContent[i].IndexOf("v") != 0)
+			if(fileContent[i].IndexOf("i") == 0)
+				indexes.Add(System.Convert.ToInt32(fileContent[i].Replace("i: ", "").Replace("\n", "")));
+		}
+
+		for(int i = 0; i < fileContent.Length; i++)
+		{
+			if(fileContent[i].IndexOf("line") != 0 && fileContent[i].IndexOf("v") != 0 && fileContent[i].IndexOf("i") != 0)
 				coordsMax++;
 		}
+
 		for(int i = 0; i < fileContent.Length; i++)
 		{
 			if(i < coordsMax / 2)
-				CreateDot(float.Parse(fileContent[i * 2]), float.Parse(fileContent[(i * 2) + 1]));
+				CreateDot(float.Parse(fileContent[i * 2 + indexes.Count]), float.Parse(fileContent[i * 2 + 1 + indexes.Count]), indexes[i]);
 		}
 
 		List<string> vals = new List<string>();
@@ -539,10 +629,10 @@ public class GameManager : MonoBehaviour
 				vals.Add(fileContent[i].Replace("v: ", "").Replace("\n", ""));
 		}
 
-		rT_I.text = vals[0];
-		val_I.text = vals[1];
-		unit_I.text = vals[2];
-		mesure_I.text = vals[3];
+		roTFrac_Input.text = vals[0];
+		val_Input.text = vals[1];
+		unit_Input.text = vals[2];
+		mesure_Input.text = vals[3];
 		hide = vals[4] == "True";
 		Camera.main.transform.position = new Vector3(float.Parse(vals[5]), float.Parse(vals[6]), Camera.main.transform.position.z);
 	}
