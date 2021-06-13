@@ -4,15 +4,15 @@
 TMP_Bitmap-Custom-Atlas.shader linguist-detectable=false
 TMP_Bitmap-Mobile.shader linguist-detectable=false
 TMP_Bitmap.shader linguist-detectable=false
-TMP_SDF Overlay.shader linguist-detectable=false
-TMP_SDF-Mobile Masking.shader linguist-detectable=false
-TMP_SDF-Mobile Overlay.shader linguist-detectable=false
+# TMP_SDF Overlay.shader linguist-detectable=false
+# TMP_SDF-Mobile Masking.shader linguist-detectable=false
+# TMP_SDF-Mobile Overlay.shader linguist-detectable=false
 TMP_SDF-Mobile.shader linguist-detectable=false
 TMP_SDF-Surface-Mobile.shader linguist-detectable=false
 TMP_SDF-Surface.shader linguist-detectable=false
 TMP_SDF.shader linguist-detectable=false
 TMP_Sprite.shader linguist-detectable=false
-TMP_SDF Internal SSD.shader linguist-detectable=false
+# TMP_SDF Internal SSD.shader linguist-detectable=false
 
 TMPro.cginc linguist-detectable=false
 TMPro_Properties.cginc linguist-detectable=false
