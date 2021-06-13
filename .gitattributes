@@ -1,8 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
-.shader linguist-detectable=false
-.cginc linguist-detectable=false
+*.shader linguist-detectable=false
+*.cginc linguist-detectable=false
 
 Benchmark01.cs linguist-detectable=false
 Benchmark01_UGUI.cs linguist-detectable=false
