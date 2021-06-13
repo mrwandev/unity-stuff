@@ -4,6 +4,23 @@
 *.shader linguist-detectable=false
 *.cginc linguist-detectable=false
 
+DebugLogLogcatListener.cs linguist-detectable=false
+DebugLogManagerEditor.cs linguist-detectable=false
+CircularBuffer.cs linguist-detectable=false
+ConsoleMethodAttribute.cs linguist-detectable=false
+DebugLogConsole.cs linguist-detectable=false
+DebugLogEntry.cs linguist-detectable=false
+DebugLogIndexList.cs linguist-detectable=false
+DebugLogItem.cs linguist-detectable=false
+DebugLogManager.cs linguist-detectable=false
+DebugLogPopup.cs linguist-detectable=false
+DebugLogRecycledListView.cs linguist-detectable=false
+DebugLogResizeListener.cs linguist-detectable=false
+DebugsOnScrollListener.cs linguist-detectable=false
+PlayerPrefsCommands.cs linguist-detectable=false
+SceneCommands.cs linguist-detectable=false
+TimeCommands.cs linguist-detectable=false
+
 Benchmark01.cs linguist-detectable=false
 Benchmark01_UGUI.cs linguist-detectable=false
 Benchmark02.cs linguist-detectable=false

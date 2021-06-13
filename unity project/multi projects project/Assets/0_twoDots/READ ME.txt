@@ -1,0 +1,7 @@
+This project(two dots) needs :
+
+	+ Folders in "0_twoDots"
+
+	+ And "IngameDebugConsole" plugin in "Plugins" folder(not really necessary, but u should disable "IngameDebugConsole" prefab in twoDots' scene or delete it to igore the plugin)
+
+	+ And finally Sprites and TextMesh Pro Folders
