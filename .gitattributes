@@ -3,6 +3,7 @@
 
 *.shader linguist-detectable=false
 *.cginc linguist-detectable=false
+*.mm linguist-detectable=false
 
 DebugLogLogcatListener.cs linguist-detectable=false
 DebugLogManagerEditor.cs linguist-detectable=false
