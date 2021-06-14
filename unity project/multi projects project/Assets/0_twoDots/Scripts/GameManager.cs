@@ -70,6 +70,17 @@ public class GameManager : MonoBehaviour
 		maxTimerVal = .3f;
 	}
 
+	public bool holdingAcurr()
+	{
+		bool yee = false;
+		foreach(GameObject line in lines)
+		{
+			if(yee == false)
+				yee = line.GetComponent<Connection>().currDot == prevDot;
+		}
+		return yee;
+	}
+
 	// Update is called once per frame
 	void Update()
 	{
@@ -87,93 +98,77 @@ public class GameManager : MonoBehaviour
 			GameObject dot2L = null;
 			GameObject lineToDel = null;
 
-			bool OneOrTwo = false;
-
-			bool conn1 = false;
-			bool conn2 = false;
-			bool conn3 = false;
-
-			GameObject lineS = null;
-			
 			foreach(GameObject line in lines)
 			{
-				if(conn1 == false)
-					conn1 = (line.GetComponent<Connection>().currDot == dot1 && line.GetComponent<Connection>().prevDot == dot2 || 
-					         line.GetComponent<Connection>().currDot == dot2 && line.GetComponent<Connection>().prevDot == dot1);
-				if(conn1)
-					lineS = line;
-
 				if(line.GetComponent<Connection>().currDot == dot1 && line.GetComponent<Connection>().prevDot == dot2 || 
 				   line.GetComponent<Connection>().currDot == dot2 && line.GetComponent<Connection>().prevDot == dot1)
 					lineToDel = line;
-				// if(conn2 == false)
-				// 	conn2 = (line.GetComponent<Connection>().currDot == dot1 && line.GetComponent<Connection>().prevDot == dot2 || 
-				// 	     line.GetComponent<Connection>().currDot == dot2 && line.GetComponent<Connection>().prevDot == dot1);
-				// if(conn3 == false)
-				// 	conn3 = (line.GetComponent<Connection>().currDot == dot1 && line.GetComponent<Connection>().prevDot == dot2 || 
-				// 	     line.GetComponent<Connection>().currDot == dot2 && line.GetComponent<Connection>().prevDot == dot1);
 			}
 
-			OneOrTwo = (!(dot1 == lineS.GetComponent<Connection>().prevDot) && !(dot2 == lineS.GetComponent<Connection>().currDot));
+			if(lineToDel != null)
+			{
+				if(lineToDel.GetComponent<Connection>().prevDot == dot1 && lineToDel.GetComponent<Connection>().currDot == dot2)
+				{
+					foreach(GameObject line in lines)
+					{
+						if(line.GetComponent<Connection>().currDot == lineToDel.GetComponent<Connection>().prevDot)
+							dot1L = line;
 
-			if(conn1)
+						if(line.GetComponent<Connection>().prevDot == lineToDel.GetComponent<Connection>().currDot)
+							dot2L = line;
+					}
+				}
+				else if(lineToDel.GetComponent<Connection>().currDot == dot1 && lineToDel.GetComponent<Connection>().prevDot == dot2)
+				{
+					foreach(GameObject line in lines)
+					{
+						if(line.GetComponent<Connection>().currDot == lineToDel.GetComponent<Connection>().prevDot)
+							dot2L = line;
+
+						if(line.GetComponent<Connection>().prevDot == lineToDel.GetComponent<Connection>().currDot)
+							dot1L = line;
+					}
+				}
+
+				if(lineToDel.GetComponent<Connection>().prevDot == dot1 && lineToDel.GetComponent<Connection>().currDot == dot2)
+					dot2L.GetComponent<Connection>().prevDot = dot1L.GetComponent<Connection>().currDot;
+
+				else if(lineToDel.GetComponent<Connection>().currDot == dot1 && lineToDel.GetComponent<Connection>().prevDot == dot2)
+					dot1L.GetComponent<Connection>().prevDot = dot2L.GetComponent<Connection>().currDot;
+
+				DeleteLine(lineToDel);
+			}
+			else
 			{
 				foreach(GameObject line in lines)
 				{
-					if(OneOrTwo)
-					{
-						if(line.GetComponent<Connection>().currDot == dot1)
-							dot1L = line;
+					if(line.GetComponent<Connection>().currDot == dot1 || line.GetComponent<Connection>().prevDot == dot1)
+						dot1L = line;
 
-						if(line.GetComponent<Connection>().prevDot == dot2)
-							dot2L = line;
-					}
-					else
-					{
-						if(line.GetComponent<Connection>().prevDot == dot1)
-							dot1L = line;
-
-						if(line.GetComponent<Connection>().currDot == dot2)
-							dot2L = line;
-					}
+					if(line.GetComponent<Connection>().prevDot == dot2 || line.GetComponent<Connection>().currDot == dot2)
+						dot2L = line;
 				}
 
-				if(OneOrTwo)
+				if(dot1L == null && dot2L == null)
+					return;
+				
+				if(dot1L.GetComponent<Connection>().currDot == dot1 && dot2L.GetComponent<Connection>().prevDot == dot2)
 				{
 					dots.Remove(dot2L.GetComponent<Connection>().prevDot);
-					Destroy(dot2L.GetComponent<Connection>().prevDot);
-				}
-				else
-				{
-					dots.Remove(dot2L.GetComponent<Connection>().currDot);
-					Destroy(dot2L.GetComponent<Connection>().currDot);					
-				}
+					Destroy(dot2L.GetComponent<Connection>().prevDot);	
 
-				if(lineToDel != null)
-				{
-					lines.Remove(lineToDel);
-					Destroy(lineToDel);
-					Destroy(GameObject.Find("text" + lineToDel.name.Replace("line", "")));
-					texts.Remove(GameObject.Find("text" + lineToDel.name.Replace("line", "")));
-				}
-
-				if(OneOrTwo)
 					dot2L.GetComponent<Connection>().prevDot = dot1L.GetComponent<Connection>().currDot;
+				}
 				else
-					dot2L.GetComponent<Connection>().currDot = dot1L.GetComponent<Connection>().prevDot;
-			}
-			else if(conn2)
-			{
+				{
+					dots.Remove(dot1L.GetComponent<Connection>().prevDot);
+					Destroy(dot1L.GetComponent<Connection>().prevDot);	
 
-			}
-
-			else if(conn3)
-			{
-				
+					dot1L.GetComponent<Connection>().prevDot = dot2L.GetComponent<Connection>().currDot;
+				}
 			}
 
 			dot2 = null;
-
 			link = false;
 		}
 
@@ -330,7 +325,7 @@ public class GameManager : MonoBehaviour
 			if(hold)
 				holdedDot = dot;
 
-			if(hold && ctrl)
+			if(hold && ctrl && Input.GetKey(KeyCode.Mouse1))
 			{
 				dot2 = dot;
 				dot2.GetComponent<SpriteRenderer>().color = Color.yellow;
@@ -349,7 +344,8 @@ public class GameManager : MonoBehaviour
 				// if(link)
 				// 	newLastHoldedDot = dot;
 			}
-			if(hold && Input.GetKey(KeyCode.Mouse1))
+
+			if(hold && Input.GetKey(KeyCode.Mouse1) && !ctrl)
 			{
 				prevDot = dot;
 				lastHoldedDot = dot;
@@ -398,6 +394,9 @@ public class GameManager : MonoBehaviour
 
 			if(hold)
 				line.GetComponent<SpriteRenderer>().color = Color.green;
+
+			if(Input.GetKeyUp(KeyCode.Mouse1) && !ctrl)
+				dot2 = null;
 		}
 	}
 
@@ -414,7 +413,12 @@ public class GameManager : MonoBehaviour
 	public void CreateDot()
 	{
 		GameObject newDot = Instantiate(dotPrefab);
-		newDot.name = "dot" + (System.Convert.ToInt32(dots[dots.Count-1].name.Replace("dot", "")) + 1).ToString();
+
+		if(dots.Count > 1)
+			newDot.name = "dot" + (System.Convert.ToInt32(dots[dots.Count-1].name.Replace("dot", "")) + 1).ToString();
+		else
+			newDot.name = "dot0";
+		
 		dots.Add(newDot);
 
 		if(dots.Count == 1)
@@ -525,6 +529,39 @@ public class GameManager : MonoBehaviour
 		}
 		Destroy(GameObject.Find("text" + holdedLine.name.Replace("line", "")));
 		texts.Remove(GameObject.Find("text" + holdedLine.name.Replace("line", "")));
+	}
+
+	public void DeleteDot()
+	{
+		dots.Remove(lastHoldedDot);
+		Destroy(lastHoldedDot);
+	} 
+
+	public void DeleteLine(GameObject line)
+	{
+		lines.Remove(line);
+		Destroy(line);
+
+		// if(noLineHasTwoDots(holdedLine.GetComponent<Connection>().currDot, holdedLine.GetComponent<Connection>().prevDot))
+		// {
+		//     dots.Remove(holdedLine.GetComponent<Connection>().prevDot);
+		//     Destroy(holdedLine.GetComponent<Connection>().prevDot);
+
+		//     dots.Remove(holdedLine.GetComponent<Connection>().currDot);
+		//     Destroy(holdedLine.GetComponent<Connection>().currDot);
+		// }
+		if(noLineHasThisDot(line.GetComponent<Connection>().prevDot))
+		{
+			dots.Remove(line.GetComponent<Connection>().prevDot);
+			Destroy(line.GetComponent<Connection>().prevDot);
+		}
+		if(noLineHasThisDot(line.GetComponent<Connection>().currDot))
+		{
+			dots.Remove(line.GetComponent<Connection>().currDot);
+			Destroy(line.GetComponent<Connection>().currDot);
+		}
+		Destroy(GameObject.Find("text" + line.name.Replace("line", "")));
+		texts.Remove(GameObject.Find("text" + line.name.Replace("line", "")));
 	}
 
 	public void Mesure(string dir)

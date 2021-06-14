@@ -14,8 +14,17 @@ public class Connection : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         if(!gameManager.loadedLines.Contains(this.gameObject.name))
         {
-            prevDot = gameManager.prevDot;
-            currDot = gameManager.currDot;
+            if(gameManager.holdingAcurr())
+            {
+                prevDot = gameManager.prevDot;
+                currDot = gameManager.currDot;
+            }
+            else
+            {
+                prevDot = gameManager.currDot;
+                currDot = gameManager.prevDot;
+            }
+
         }
     }
 
