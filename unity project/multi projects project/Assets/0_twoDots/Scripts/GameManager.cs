@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
 	bool hold, holding, moveB, yORx, hide, link;
 	// [HideInInspector]
 	public bool ctrl;
+	// , OneOrTwo;
 	Vector3 pos, touchPos;
 
 	// Start is called before the first frame update
@@ -86,30 +87,91 @@ public class GameManager : MonoBehaviour
 			GameObject dot2L = null;
 			GameObject lineToDel = null;
 
+			bool OneOrTwo = false;
+
+			bool conn1 = false;
+			bool conn2 = false;
+			bool conn3 = false;
+
+			GameObject lineS = null;
+			
 			foreach(GameObject line in lines)
 			{
-				if(line.GetComponent<Connection>().currDot == dot1)
-					dot1L = line;
+				if(conn1 == false)
+					conn1 = (line.GetComponent<Connection>().currDot == dot1 && line.GetComponent<Connection>().prevDot == dot2 || 
+					         line.GetComponent<Connection>().currDot == dot2 && line.GetComponent<Connection>().prevDot == dot1);
+				if(conn1)
+					lineS = line;
 
-				if(line.GetComponent<Connection>().prevDot == dot2)
-					dot2L = line;
-
-				if(line.GetComponent<Connection>().prevDot == dot1)
+				if(line.GetComponent<Connection>().currDot == dot1 && line.GetComponent<Connection>().prevDot == dot2 || 
+				   line.GetComponent<Connection>().currDot == dot2 && line.GetComponent<Connection>().prevDot == dot1)
 					lineToDel = line;
+				// if(conn2 == false)
+				// 	conn2 = (line.GetComponent<Connection>().currDot == dot1 && line.GetComponent<Connection>().prevDot == dot2 || 
+				// 	     line.GetComponent<Connection>().currDot == dot2 && line.GetComponent<Connection>().prevDot == dot1);
+				// if(conn3 == false)
+				// 	conn3 = (line.GetComponent<Connection>().currDot == dot1 && line.GetComponent<Connection>().prevDot == dot2 || 
+				// 	     line.GetComponent<Connection>().currDot == dot2 && line.GetComponent<Connection>().prevDot == dot1);
 			}
-			
-			dots.Remove(dot2L.GetComponent<Connection>().prevDot);
-			Destroy(dot2L.GetComponent<Connection>().prevDot);
 
-			if(lineToDel != null)
+			OneOrTwo = (!(dot1 == lineS.GetComponent<Connection>().prevDot) && !(dot2 == lineS.GetComponent<Connection>().currDot));
+
+			if(conn1)
 			{
-				lines.Remove(lineToDel);
-				Destroy(lineToDel);
-				Destroy(GameObject.Find("text" + lineToDel.name.Replace("line", "")));
-				texts.Remove(GameObject.Find("text" + lineToDel.name.Replace("line", "")));
+				foreach(GameObject line in lines)
+				{
+					if(OneOrTwo)
+					{
+						if(line.GetComponent<Connection>().currDot == dot1)
+							dot1L = line;
+
+						if(line.GetComponent<Connection>().prevDot == dot2)
+							dot2L = line;
+					}
+					else
+					{
+						if(line.GetComponent<Connection>().prevDot == dot1)
+							dot1L = line;
+
+						if(line.GetComponent<Connection>().currDot == dot2)
+							dot2L = line;
+					}
+				}
+
+				if(OneOrTwo)
+				{
+					dots.Remove(dot2L.GetComponent<Connection>().prevDot);
+					Destroy(dot2L.GetComponent<Connection>().prevDot);
+				}
+				else
+				{
+					dots.Remove(dot2L.GetComponent<Connection>().currDot);
+					Destroy(dot2L.GetComponent<Connection>().currDot);					
+				}
+
+				if(lineToDel != null)
+				{
+					lines.Remove(lineToDel);
+					Destroy(lineToDel);
+					Destroy(GameObject.Find("text" + lineToDel.name.Replace("line", "")));
+					texts.Remove(GameObject.Find("text" + lineToDel.name.Replace("line", "")));
+				}
+
+				if(OneOrTwo)
+					dot2L.GetComponent<Connection>().prevDot = dot1L.GetComponent<Connection>().currDot;
+				else
+					dot2L.GetComponent<Connection>().currDot = dot1L.GetComponent<Connection>().prevDot;
+			}
+			else if(conn2)
+			{
+
 			}
 
-			dot2L.GetComponent<Connection>().prevDot = dot1L.GetComponent<Connection>().currDot;
+			else if(conn3)
+			{
+				
+			}
+
 			dot2 = null;
 
 			link = false;
@@ -188,7 +250,7 @@ public class GameManager : MonoBehaviour
 		//                Application.persistentDataPath + "/" + "data.mrwan" + "\n" +
 		//                Application.streamingAssetsPath + "/" + "data.mrwan";
 
-		debugText.text = saveFileDir;
+		// debugText.text = saveFileDir;
 
 		// if(Input.touchCount > 0 && timer < maxTimerVal && !hold || Input.touchCount > 0 && timer < maxTimerVal && !holding)
 		//  debugText.text = timer.ToString();
