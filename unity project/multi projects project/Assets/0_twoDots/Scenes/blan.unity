@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -97,7 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: cecdb2e917135a44185306ab432b4c10,
+    type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
@@ -6434,6 +6435,8 @@ MonoBehaviour:
   dot2: {fileID: 0}
   dotPrefab: {fileID: 6816364709010595518, guid: 6b70c532f74742d49a562aa0035c120c,
     type: 3}
+  cubePrefab: {fileID: 8560835827913754702, guid: 07191066a06f1c947b81cad8809a5ad8,
+    type: 3}
   linePrefab: {fileID: 239650574322257641, guid: 000b328cebb07df46a5982d33490f728,
     type: 3}
   textForLinePrefab: {fileID: 966459145429183004, guid: 26562188118cd7649abeaddcf8116504,
@@ -6467,6 +6470,7 @@ MonoBehaviour:
   - {fileID: 113501561}
   - {fileID: 621156645}
   - {fileID: 2064284060}
+  cubes: []
   prevDot: {fileID: 0}
   currDot: {fileID: 0}
   square: {fileID: 471216729}

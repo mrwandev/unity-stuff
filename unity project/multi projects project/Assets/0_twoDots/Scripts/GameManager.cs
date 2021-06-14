@@ -8,12 +8,12 @@ using System.IO;
 public class GameManager : MonoBehaviour
 {
 	// public Slider slider;
-	public GameObject dot1, dot2, dotPrefab, linePrefab, textForLinePrefab, arrows, hideButtonGo, hideTButtonGo;
+	public GameObject dot1, dot2, dotPrefab, cubePrefab, linePrefab, textForLinePrefab, arrows, hideButtonGo, hideTButtonGo;
 	public TextMeshProUGUI debugText, unit_Text, deleteLine_Text, holdedDot_Text;
 	public TMP_InputField val_Input, roTFrac_Input, unit_Input, mesure_Input;
 	public string saveFileDir, loadedLines;
 	public Toggle singleDotToggle;
-	public List<GameObject> dots, lines, texts, uiStuff;
+	public List<GameObject> dots, lines, texts, uiStuff, cubes;
 	[HideInInspector]
 	public GameObject prevDot, currDot, square, holdedDot, holdedLine, lastHoldedDot;
 	[HideInInspector]
@@ -297,6 +297,13 @@ public class GameManager : MonoBehaviour
 
 		foreach(GameObject line in lines)
 		{
+			if(GameObject.Find("cube"+line.name.Replace("line", "")) == null)
+			{
+				GameObject cube = Instantiate(cubePrefab);
+				cube.name = "cube" + (System.Convert.ToInt32(dots[dots.Count-1].name.Replace("dot", ""))).ToString();
+				cubes.Add(cube);
+			}
+
 			if(GameObject.Find("text"+line.name.Replace("line", "")) == null)
 			{
 				GameObject text = Instantiate(textForLinePrefab);
@@ -414,7 +421,7 @@ public class GameManager : MonoBehaviour
 	{
 		GameObject newDot = Instantiate(dotPrefab);
 
-		if(dots.Count > 1)
+		if(dots.Count > 0)
 			newDot.name = "dot" + (System.Convert.ToInt32(dots[dots.Count-1].name.Replace("dot", "")) + 1).ToString();
 		else
 			newDot.name = "dot0";
