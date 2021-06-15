@@ -11,8 +11,9 @@ public class Connection : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        if(!gameManager.loadedLines.Contains(this.gameObject.name))
+        if(!gameManager.loadedLines.Contains(this.gameObject.name) && !gameManager.customConn)
         {
             if(gameManager.holdingAcurr())
             {
@@ -24,10 +25,12 @@ public class Connection : MonoBehaviour
                 prevDot = gameManager.currDot;
                 currDot = gameManager.prevDot;
             }
-
         }
+        else
+            gameManager.customConn = false;
 
-        cube = gameManager.cubes[System.Convert.ToInt32(this.gameObject.name.Replace("line", ""))-1];
+        if(gameManager.cubes.Count > 0)
+            cube = gameManager.cubes[System.Convert.ToInt32(this.gameObject.name.Replace("line", ""))-1];
     }
 
     // Update is called once per frame
@@ -36,9 +39,9 @@ public class Connection : MonoBehaviour
     	if(gameManager.dots.Count > 1 && prevDot != null && currDot != null)
         {
     		twoDotsClass.twoDots(prevDot, currDot, this.gameObject, .9f, gameManager.rotationFractions);
-            cube.transform.position = new Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y, -cube.transform.localScale.z/2);
-            cube.transform.eulerAngles = new Vector3(cube.transform.eulerAngles.x, cube.transform.eulerAngles.y, this.gameObject.transform.eulerAngles.z);
-            cube.transform.localScale = new Vector3(this.gameObject.transform.localScale.x, cube.transform.localScale.y, 5f);
+            // cube.transform.position = new Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y, -cube.transform.localScale.z/2);
+            // cube.transform.eulerAngles = new Vector3(cube.transform.eulerAngles.x, cube.transform.eulerAngles.y, this.gameObject.transform.eulerAngles.z);
+            // cube.transform.localScale = new Vector3(this.gameObject.transform.localScale.x, cube.transform.localScale.y, 5f);
         }
     }
 }

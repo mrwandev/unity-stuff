@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
 	// public Slider slider;
-	public GameObject dot1, dot2, dotPrefab, cubePrefab, linePrefab, textForLinePrefab, arrows, hideButtonGo, hideTButtonGo;
+	public GameObject debugUnit, dot1, dot2, dotPrefab, cubePrefab, linePrefab, textForLinePrefab, arrows, hideButtonGo, hideTButtonGo;
 	public TextMeshProUGUI debugText, unit_Text, deleteLine_Text, holdedDot_Text;
 	public TMP_InputField val_Input, roTFrac_Input, unit_Input, mesure_Input;
 	public string saveFileDir, loadedLines;
@@ -20,9 +21,9 @@ public class GameManager : MonoBehaviour
 	public float timer, arrowsFloat, val, maxTimerVal, rotationFractions, unit, odrunit, shownUnit;
 	bool hold, holding, moveB, yORx, hide, link;
 	// [HideInInspector]
-	public bool ctrl;
-	// , OneOrTwo;
+	public bool ctrl, customConn;
 	Vector3 pos, touchPos;
+	int d_keycode;
 
 	// Start is called before the first frame update
 	void Start()
@@ -81,9 +82,26 @@ public class GameManager : MonoBehaviour
 		return yee;
 	}
 
+	public void reload()
+	{
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+	}
+
 	// Update is called once per frame
 	void Update()
 	{
+		if(Input.GetKeyDown(KeyCode.D))
+			d_keycode++;
+
+		if(d_keycode == 1)
+			debugUnit.SetActive(true);
+
+		if(d_keycode == 2)
+		{
+			debugUnit.SetActive(false);
+			d_keycode = 0;
+		}
+
 		if(dot2 != null)
 			dot2.GetComponent<SpriteRenderer>().color = Color.yellow;
 
@@ -149,24 +167,29 @@ public class GameManager : MonoBehaviour
 						dot2L = line;
 				}
 
-				if(dot1L == null && dot2L == null)
-					return;
-				
-				if(dot1L.GetComponent<Connection>().currDot == dot1 && dot2L.GetComponent<Connection>().prevDot == dot2)
+				if(dot1L != null && dot2L != null)
 				{
-					dots.Remove(dot2L.GetComponent<Connection>().prevDot);
-					Destroy(dot2L.GetComponent<Connection>().prevDot);	
+					if(dot1L.GetComponent<Connection>().currDot == dot1 && dot2L.GetComponent<Connection>().prevDot == dot2)
+					{
+						dots.Remove(dot2L.GetComponent<Connection>().prevDot);
+						Destroy(dot2L.GetComponent<Connection>().prevDot);	
 
-					dot2L.GetComponent<Connection>().prevDot = dot1L.GetComponent<Connection>().currDot;
-				}
-				else
-				{
-					dots.Remove(dot1L.GetComponent<Connection>().prevDot);
-					Destroy(dot1L.GetComponent<Connection>().prevDot);	
+						dot2L.GetComponent<Connection>().prevDot = dot1L.GetComponent<Connection>().currDot;
+					}
+					else
+					{
+						dots.Remove(dot1L.GetComponent<Connection>().prevDot);
+						Destroy(dot1L.GetComponent<Connection>().prevDot);	
 
-					dot1L.GetComponent<Connection>().prevDot = dot2L.GetComponent<Connection>().currDot;
+						dot1L.GetComponent<Connection>().prevDot = dot2L.GetComponent<Connection>().currDot;
+					}
 				}
 			}
+
+			if(lines.Count > 0)
+				CreateConnection(dot1, dot2, "line"+(System.Convert.ToInt32(lines[lines.Count-1].name.Replace("line", ""))+1).ToString(), 1);
+			else if(lines.Count == 0)
+				CreateConnection(dot1, dot2, "line0", 1);
 
 			dot2 = null;
 			link = false;
@@ -297,12 +320,12 @@ public class GameManager : MonoBehaviour
 
 		foreach(GameObject line in lines)
 		{
-			if(GameObject.Find("cube"+line.name.Replace("line", "")) == null)
-			{
-				GameObject cube = Instantiate(cubePrefab);
-				cube.name = "cube" + (System.Convert.ToInt32(dots[dots.Count-1].name.Replace("dot", ""))).ToString();
-				cubes.Add(cube);
-			}
+			// if(GameObject.Find("cube"+line.name.Replace("line", "")) == null)
+			// {
+			// 	GameObject cube = Instantiate(cubePrefab);
+			// 	cube.name = "cube" + (System.Convert.ToInt32(dots[dots.Count-1].name.Replace("dot", ""))).ToString();
+			// 	cubes.Add(cube);
+			// }
 
 			if(GameObject.Find("text"+line.name.Replace("line", "")) == null)
 			{
@@ -453,9 +476,11 @@ public class GameManager : MonoBehaviour
 		newDot.transform.position = new Vector3(x, y, 0f);
 	}
 
-	public void CreateConnection(GameObject _prevDot, GameObject _currDot, string linename)
+	public void CreateConnection(GameObject _prevDot, GameObject _currDot, string linename, int YES)
 	{
-		if(dots.Count > 1)
+		customConn = YES == 1;
+
+		if(dots.Count > 1 || YES == 1)
 		{
 			GameObject newLine = Instantiate(linePrefab);
 			newLine.name = linename;
@@ -540,6 +565,24 @@ public class GameManager : MonoBehaviour
 
 	public void DeleteDot()
 	{
+		List<GameObject> linesToDel = new List<GameObject>();
+
+		foreach(GameObject line in lines)
+		{
+			if(line.GetComponent<Connection>().currDot == lastHoldedDot || line.GetComponent<Connection>().prevDot == lastHoldedDot)
+				linesToDel.Add(line);
+		}
+
+		foreach(GameObject line in linesToDel)
+		{
+			lines.Remove(line);
+			Destroy(line);
+
+			texts.Remove(GameObject.Find("text" + line.name.Replace("line", "")));
+			Destroy(GameObject.Find("text" + line.name.Replace("line", "")));
+		}
+
+
 		dots.Remove(lastHoldedDot);
 		Destroy(lastHoldedDot);
 	} 
@@ -729,7 +772,7 @@ public class GameManager : MonoBehaviour
 				loadedLines += linename.Replace("=", "&");
 				GameObject dot1 = GameObject.Find(indexCharStart(fileContent[i], fileContent[i].IndexOf("+")).Replace(linename, ""));
 				GameObject dot2 = GameObject.Find(fileContent[i].Replace(indexCharStart(fileContent[i], fileContent[i].IndexOf("+")) + "+", "").Replace(linename, ""));
-				CreateConnection(dot1, dot2, linename.Replace("=", ""));
+				CreateConnection(dot1, dot2, linename.Replace("=", ""), 0);
 			}
 			else if(fileContent[i].IndexOf("v") == 0)
 				vals.Add(fileContent[i].Replace("v: ", "").Replace("\n", ""));
