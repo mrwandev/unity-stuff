@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Connection : MonoBehaviour
 {
-	GameManager gameManager;
-	// [HideInInspector]
-	public GameObject prevDot, currDot, cube;
+    GameManager gameManager;
+    // [HideInInspector]
+    public GameObject prevDot, currDot, cube;
 
     // Start is called before the first frame update
     void Start()
@@ -36,9 +36,9 @@ public class Connection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-    	if(gameManager.dots.Count > 1 && prevDot != null && currDot != null)
+        if(gameManager.dots.Count > 1 && prevDot != null && currDot != null)
         {
-    		twoDotsClass.twoDots(prevDot, currDot, this.gameObject, .9f, gameManager.rotationFractions);
+            twoDotsClass.twoDots(prevDot, currDot, this.gameObject, .9f, gameManager.rotationFractions);
             // cube.transform.position = new Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y, -cube.transform.localScale.z/2);
             // cube.transform.eulerAngles = new Vector3(cube.transform.eulerAngles.x, cube.transform.eulerAngles.y, this.gameObject.transform.eulerAngles.z);
             // cube.transform.localScale = new Vector3(this.gameObject.transform.localScale.x, cube.transform.localScale.y, 5f);

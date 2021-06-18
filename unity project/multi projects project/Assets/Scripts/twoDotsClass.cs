@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class twoDotsClass : MonoBehaviour
 {
-	// public GameObject dot1, dot2, dot3, ting1, ting2;
-	// public float cos, sin, angle, thickness;
+    // public GameObject dot1, dot2, dot3, ting1, ting2;
+    // public float cos, sin, angle, thickness;
 
     // Start is called before the first frame update
     void Start()
@@ -88,7 +88,7 @@ public class twoDotsClass : MonoBehaviour
     public static float acos(float cos)
     {
         float rad = 180/Mathf.PI;
-    	return Mathf.Acos(cos)*rad;
+        return Mathf.Acos(cos)*rad;
     }
 
     public static void print(float f)
