@@ -1,0 +1,577 @@
+[I dont want to add shit here anymore it takes a lot of time]
+
+akinator project :
+
+goal 100 character + (at least 50)
+
+now : 23 q [max] to find 1/20 characters
+
+characters and question to get answer from :
+
+20 youtubers (all) | 18 males | 2 female | 20 alive (all) | 0 dead | 8 animators | 2 singers | 3 devs |
+
+isMale
+isFemale
+isAlive
+isReal
+speaksEnglish
+isYoutuber
+isAnimator
+gaming
+minecraftVideos
+hideFace
+speaksSwedish
+speaksIrish
+isSquid
+haveAGoose
+lastNameDanger
+wetHisBed
+halfMexican
+isSinger
+isTheGreatestCOAT
+isFamous4Mods
+ownsAClothingCompany
+isAGameDev
+isRelatedToScience
+madeSomeWeirdVods
+
+Jaiden Animations
+PewDiePie
+jacksepticeye
+TheOdd1sOut
+CallMeCarson
+Corpse Husband
+Domics
+Andrei Terbea
+Daidus
+Emirichu
+LixianTV
+SomeThingElseYT
+Ksi
+penguinz0
+MxR
+Markiplier 
+Dani
+Roomie
+Tom Scott
+Vsauce
+
+Jaiden Animations
+	-isMale
+	isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	isAnimator
+	gaming
+	minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+PewDiePie
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	-isAnimator
+	gaming
+	minecraftVideos
+	-hideFace
+	speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+jacksepticeye
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	-isAnimator
+	gaming
+	minecraftVideos
+	-hideFace
+	-speaksSwedish
+	speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+TheOdd1sOut
+ 	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	isAnimator
+	-gaming
+	-minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+CallMeCarson
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	-isAnimator
+	gaming
+	minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+Corpse Husband
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	-isAnimator
+	gaming
+	-minecraftVideos
+	hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+Domics
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	isAnimator
+	-gaming
+	-minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+Andrei Terbea
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	isAnimator
+	-gaming
+	-minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+Daidus
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	isAnimator
+	-gaming
+	-minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+Emirichu
+	-isMale
+	isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	isAnimator
+	-gaming
+	-minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+LixianTV
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	isAnimator
+	gaming
+	minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+SomeThingElseYT
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	isAnimator
+	-gaming
+	-minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	halfMexican
+	isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+Ksi
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	-isAnimator
+	gaming
+	minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+penguinz0
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	-isAnimator
+	gaming
+	minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+MxR
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	-isAnimator
+	gaming
+	-minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+Markiplier
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	-isAnimator
+	gaming
+	minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+Dani
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	-isAnimator
+	gaming
+	minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+Roomie
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	-isAnimator
+	-gaming
+	-minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	-isRelatedToScience
+	-madeSomeWeirdVods
+
+Tom Scott
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	-isAnimator
+	-gaming
+	-minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	isRelatedToScience
+	-madeSomeWeirdVods
+
+Vsauce
+	isMale
+	-isFemale
+	isAlive
+	isReal
+	speaksEnglish
+	isYoutuber
+	-isAnimator
+	-gaming
+	-minecraftVideos
+	-hideFace
+	-speaksSwedish
+	-speaksIrish
+	-wetHisBed
+	-isSquid
+	-lastNameDanger
+	-haveAgoose
+	-halfMexican
+	-isSinger
+	-isTheGreatestCOAT
+	-isFamous4Mods
+	-ownsAClothingCompany
+	-isAGameDev
+	isRelatedToScience
+	madeSomeWeirdVods

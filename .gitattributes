@@ -772,3 +772,47 @@ TimelineCreateUtilities.cs linguist-detectable=false
 TimelineUndo.cs linguist-detectable=false
 TimeUtility.cs linguist-detectable=false
 WeightUtility.cs linguist-detectable=false
+
+# TextMeshPro (unity package) c# scripts i dont want to count as scripts i wrote
+Benchmark01.cs linguist-detectable=false
+Benchmark01_UGUI.cs linguist-detectable=false
+Benchmark02.cs linguist-detectable=false
+Benchmark03.cs linguist-detectable=false
+Benchmark04.cs linguist-detectable=false
+CameraController.cs linguist-detectable=false
+ChatController.cs linguist-detectable=false
+EnvMapAnimator.cs linguist-detectable=false
+ObjectSpin.cs linguist-detectable=false
+ShaderPropAnimator.cs linguist-detectable=false
+SimpleScript.cs linguist-detectable=false
+SkewTextExample.cs linguist-detectable=false
+TeleType.cs linguist-detectable=false
+TextConsoleSimulator.cs linguist-detectable=false
+TextMeshProFloatingText.cs linguist-detectable=false
+TextMeshSpawner.cs linguist-detectable=false
+TMPro_InstructionOverlay.cs linguist-detectable=false
+TMP_DigitValidator.cs linguist-detectable=false
+TMP_ExampleScript_01.cs linguist-detectable=false
+TMP_FrameRateCounter.cs linguist-detectable=false
+TMP_PhoneNumberValidator.cs linguist-detectable=false
+TMP_TextEventCheck.cs linguist-detectable=false
+TMP_TextEventHandler.cs linguist-detectable=false
+TMP_TextInfoDebugTool.cs linguist-detectable=false
+TMP_TextSelector_A.cs linguist-detectable=false
+TMP_TextSelector_B.cs linguist-detectable=false
+TMP_UiFrameRateCounter.cs linguist-detectable=false
+VertexColorCycler.cs linguist-detectable=false
+VertexJitter.cs linguist-detectable=false
+VertexShakeA.cs linguist-detectable=false
+VertexShakeB.cs linguist-detectable=false
+VertexZoom.cs linguist-detectable=false
+WarpTextExample.cs linguist-detectable=false
+
+# aspx scripts (in unity builds) dont want to count as scripts i wrote
+DefaultWsdlHelpGenerator.aspx linguist-detectable=false
+DefaultWsdlHelpGenerator.aspx linguist-detectable=false
+DefaultWsdlHelpGenerator.aspx linguist-detectable=false
+
+# TextMeshPro (unity package) shader and scripts i dont want to count as scripts i wrote
+*.cginc linguist-detectable=false
+*.shader linguist-detectable=false
